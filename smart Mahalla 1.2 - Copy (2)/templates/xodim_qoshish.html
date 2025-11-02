@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xodim Qo'shish - Smart Mahallah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        [data-bs-theme="dark"] {
+            --bg-color: #1a1d29;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --border-color: #4a5568;
+        }
+
+        [data-bs-theme="light"] {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+            background: var(--card-bg);
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .sidebar .nav-link {
+            color: var(--text-color);
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            background: var(--bg-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .form-control, .form-select {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+
+        .location-breadcrumb {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body data-bs-theme="light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0 ">
+                <div class="p-3 ">
+                    <!-- Logo -->
+                    <div class="text-center mb-4 py-3">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-city fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Smart Mahallah</h5>
+                        <small class="text-light opacity-75">Admin Panel</small>
+                    </div>
+                    
+                    <!-- Navigation Menu -->
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link ">
+                                <i class="fas fa-tachometer-alt me-3"></i>
+                                {{ texts.dashboard }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/viloyatlar" class="nav-link">
+                                <i class="fas fa-map-marker-alt me-3"></i>
+                                {{ texts.regions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/tumanlar" class="nav-link ">
+                                <i class="fas fa-map me-3"></i>
+                                {{ texts.districts }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/mfylar" class="nav-link">
+                                <i class="fas fa-home me-3"></i>
+                                {{ texts.neighborhoods }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/lavozimlar" class="nav-link">
+                                <i class="fas fa-users me-3"></i>
+                                {{ texts.positions }}
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a href="/admin/faoliyat" class="nav-link ">
+                                <i class="fas fa-history me-3"></i>
+                                {{ texts.activity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sozlamalar" class="nav-link">
+                                <i class="fas fa-cogs me-3"></i>
+                                {{ texts.settings }}
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4 bg-light opacity-25">
+                    
+                    <!-- User Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded" 
+                           data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.1);">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ username }}</strong>
+                                <small class="opacity-75">
+                                    {% if session.role %}
+                                        {{ session.role|replace('_', ' ')|title }}
+                                    {% else %}
+                                        Admin
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow">
+                            <li>
+                                <a class="dropdown-item" href="/admin/sozlamalar">
+                                    <i class="fas fa-user-cog me-2"></i>
+                                    {{ texts.profile_settings }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    {{ texts.logout }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content p-0">
+                <!-- Navbar -->
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-primary me-3 d-md-none">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <h5 class="mb-0">Xodim Qo'shish</h5>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- User Dropdown -->
+                            <div class="dropdown user-dropdown">
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-2"></i>{{ username }}
+                                    <span class="badge bg-warning ms-2">Admin</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/admin/sozlamalar"><i class="fas fa-cog me-2"></i>Sozlamalar</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profil</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="/admin/logout"><i class="fas fa-sign-out-alt me-2"></i>Chiqish</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Content -->
+                <div class="p-4">
+                    <!-- Location Breadcrumb -->
+                    <div class="location-breadcrumb">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    <strong>{{ viloyat }}</strong>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <i class="fas fa-city me-2"></i>
+                                    <strong>{{ tuman }}</strong>
+                                </li>
+                                <li class="breadcrumb-item active">
+                                    <i class="fas fa-home me-2"></i>
+                                    <strong>{{ mahalla }}</strong>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                    <!-- Xodim Qo'shish Formasi -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user-plus me-2"></i>Yangi Xodim Qo'shish
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="xodimForm">
+                                <input type="hidden" id="viloyatNomi" value="{{ viloyat }}">
+                                <input type="hidden" id="tumanNomi" value="{{ tuman }}">
+                                <input type="hidden" id="mahallaNomi" value="{{ mahalla }}">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="lavozimSelect" class="form-label">Lavozim</label>
+                                            <select class="form-select" id="lavozimSelect" required>
+                                                <option value="">Lavozimni tanlang</option>
+                                                <option value="hokim">Hokim</option>
+                                                <option value="hokim_yordamchisi">Hokim Yordamchisi</option>
+                                                <option value="mfy_raisi">MFY Raisi</option>
+                                                <option value="2-sektor_rahbari">2-Sektor Rahbari</option>
+                                                <option value="iib_inspektori">IIB Inspektori</option>
+                                                <option value="yoshlar_yetakchisi">Yoshlar Yetakchisi</option>
+                                                <option value="boshqa">Boshqa Lavozim</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3" id="boshqaLavozimGroup" style="display: none;">
+                                            <label for="boshqaLavozim" class="form-label">Boshqa Lavozim Nomi</label>
+                                            <input type="text" class="form-control" id="boshqaLavozim" placeholder="Lavozim nomini kiriting">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="ism" class="form-label">Ism</label>
+                                            <input type="text" class="form-control" id="ism" placeholder="Ism" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="familya" class="form-label">Familiya</label>
+                                            <input type="text" class="form-control" id="familya" placeholder="Familiya" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="otasiniIsmi" class="form-label">Otasining Ismi</label>
+                                            <input type="text" class="form-control" id="otasiniIsmi" placeholder="Ota ismi" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="telefon" class="form-label">Telefon Raqami</label>
+                                            <input type="tel" class="form-control" id="telefon" placeholder="+998-90-123-45-67" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" placeholder="email@example.com">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-secondary" onclick="goBack()">
+                                        <i class="fas fa-arrow-left me-2"></i>Orqaga
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Xodimni Qo'shish
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Mavjud Xodimlar -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-list me-2"></i>Mavjud Xodimlar
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Lavozim</th>
+                                            <th>Ism Familiya</th>
+                                            <th>Telefon</th>
+                                            <th>Email</th>
+                                            <th>Amallar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="xodimlarTable">
+                                        <!-- Xodimlar ma'lumotlari JavaScript orqali to'ldiriladi -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Lavozim select ni boshqarish
+        document.getElementById('lavozimSelect').addEventListener('change', function() {
+            const boshqaLavozimGroup = document.getElementById('boshqaLavozimGroup');
+            if (this.value === 'boshqa') {
+                boshqaLavozimGroup.style.display = 'block';
+            } else {
+                boshqaLavozimGroup.style.display = 'none';
+            }
+        });
+
+        // Orqaga qaytish
+        function goBack() {
+            window.history.back();
+        }
+
+        // Formani yuborish
+        document.getElementById('xodimForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const viloyat = document.getElementById('viloyatNomi').value;
+            const tuman = document.getElementById('tumanNomi').value;
+            const mahalla = document.getElementById('mahallaNomi').value;
+            let lavozim = document.getElementById('lavozimSelect').value;
+            const ism = document.getElementById('ism').value;
+            const familya = document.getElementById('familya').value;
+            const otasiniIsmi = document.getElementById('otasiniIsmi').value;
+            const telefon = document.getElementById('telefon').value;
+            const email = document.getElementById('email').value;
+
+            if (lavozim === 'boshqa') {
+                lavozim = document.getElementById('boshqaLavozim').value;
+                if (!lavozim.trim()) {
+                    alert('Boshqa lavozim nomini kiriting!');
+                    return;
+                }
+            }
+
+            const toliqIsm = `${ism} ${familya} ${otasiniIsmi}`;
+
+            try {
+                const response = await fetch('/admin/add_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        viloyat_nomi: viloyat,
+                        tuman_nomi: tuman,
+                        mahalla_nomi: mahalla,
+                        lavozim: lavozim,
+                        ism: toliqIsm,
+                        telefon: telefon,
+                        email: email
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    document.getElementById('xodimForm').reset();
+                    loadXodimlar(); // Xodimlar ro'yxatini yangilash
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                alert('Xatolik yuz berdi: ' + error);
+            }
+        });
+
+        // Xodimlarni yuklash
+        async function loadXodimlar() {
+            const viloyat = document.getElementById('viloyatNomi').value;
+            const tuman = document.getElementById('tumanNomi').value;
+            const mahalla = document.getElementById('mahallaNomi').value;
+
+            try {
+                const response = await fetch(`/admin/get_xodimlar?viloyat=${viloyat}&tuman=${tuman}&mahalla=${mahalla}`);
+                const xodimlar = await response.json();
+                
+                const tableBody = document.getElementById('xodimlarTable');
+                tableBody.innerHTML = '';
+
+                for (const [lavozim, malumot] of Object.entries(xodimlar)) {
+                    if (malumot.ism) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${lavozim.replace(/_/g, ' ').toUpperCase()}</td>
+                            <td>${malumot.ism}</td>
+                            <td>${malumot.telefon || '-'}</td>
+                            <td>${malumot.email || '-'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteXodim('${lavozim}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                }
+            } catch (error) {
+                console.error('Xodimlarni yuklashda xato:', error);
+            }
+        }
+
+        // Xodimni o'chirish
+        async function deleteXodim(lavozim) {
+            if (!confirm(`Ushbu xodimni o'chirishni tasdiqlaysizmi?`)) {
+                return;
+            }
+
+            const viloyat = document.getElementById('viloyatNomi').value;
+            const tuman = document.getElementById('tumanNomi').value;
+            const mahalla = document.getElementById('mahallaNomi').value;
+
+            try {
+                const response = await fetch('/admin/delete_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        viloyat_nomi: viloyat,
+                        tuman_nomi: tuman,
+                        mahalla_nomi: mahalla,
+                        lavozim: lavozim
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    loadXodimlar();
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                alert('Xatolik yuz berdi: ' + error);
+            }
+        }
+
+        // Sahifa yuklanganda xodimlarni yuklash
+        document.addEventListener('DOMContentLoaded', function() {
+            loadXodimlar();
+        });
+    </script>
+</body>
+</html>

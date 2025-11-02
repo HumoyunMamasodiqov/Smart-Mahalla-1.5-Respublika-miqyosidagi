@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.settings }} - Smart Mahallah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #17a2b8;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            --hover-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 0%, #1a2530 100%);
+            min-height: 100vh;
+            color: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 250px;
+            z-index: 100;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 3px 10px;
+            transition: all 0.3s ease;
+            border: none;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .settings-card {
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            border: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .settings-card:hover {
+            box-shadow: var(--hover-shadow);
+            transform: translateY(-3px);
+        }
+        
+        .settings-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 25px;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .settings-body {
+            padding: 25px;
+            background: white;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.15);
+        }
+        
+        .btn {
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .btn-info {
+            background: var(--info-color);
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+        }
+        
+        .admin-table {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .admin-table th {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .admin-table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+        
+        .system-info-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            border-bottom: 2px solid #f8f9fa;
+            border-radius: 15px 15px 0 0;
+            padding: 20px 25px;
+        }
+        
+        .modal-footer {
+            border-top: 2px solid #f8f9fa;
+            border-radius: 0 0 15px 15px;
+            padding: 20px 25px;
+        }
+        
+        .password-strength {
+            height: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .password-weak { background: #e74c3c; width: 25%; }
+        .password-medium { background: #f39c12; width: 50%; }
+        .password-strong { background: #27ae60; width: 75%; }
+        .password-very-strong { background: #2ecc71; width: 100%; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .custom-notification {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .login-change-section {
+            border-left: 4px solid var(--info-color);
+            padding-left: 20px;
+            margin-top: 30px;
+        }
+        
+        .section-divider {
+            border-top: 2px dashed #e9ecef;
+            margin: 30px 0;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stats-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .security-tips {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .tip-item i {
+            color: var(--success-color);
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                min-height: auto;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-lg-2 sidebar">
+                <div class="p-3">
+                    <!-- Logo -->
+                    <div class="text-center mb-4 py-3">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-city fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Smart Mahallah</h5>
+                        <small class="text-light opacity-75">Admin Panel</small>
+                    </div>
+                    
+                    <!-- Navigation Menu -->
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link">
+                                <i class="fas fa-tachometer-alt"></i>
+                                {{ texts.dashboard }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/viloyatlar" class="nav-link">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ texts.regions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/tumanlar" class="nav-link">
+                                <i class="fas fa-map"></i>
+                                {{ texts.districts }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/mfylar" class="nav-link">
+                                <i class="fas fa-home"></i>
+                                {{ texts.neighborhoods }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/lavozimlar" class="nav-link">
+                                <i class="fas fa-users"></i>
+                                {{ texts.positions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/faoliyat" class="nav-link">
+                                <i class="fas fa-history"></i>
+                                {{ texts.activity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sozlamalar" class="nav-link active">
+                                <i class="fas fa-cogs"></i>
+                                {{ texts.settings }}
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4 bg-light opacity-25">
+                    
+                    <!-- User Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded" 
+                           data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.1);">
+                            <div class="user-avatar me-3">
+                                {{ username[0]|upper }}
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ username }}</strong>
+                                <small class="opacity-75">
+                                    {% if session.role %}
+                                        {{ session.role|replace('_', ' ')|title }}
+                                    {% else %}
+                                        Admin
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow">
+                            <li>
+                                <a class="dropdown-item" href="/admin/sozlamalar">
+                                    <i class="fas fa-user-cog me-2"></i>
+                                    {{ texts.profile_settings }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    {{ texts.logout }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 main-content">
+                <!-- Header -->
+                <div class="page-header fade-in">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="fw-bold text-dark mb-1">
+                                <i class="fas fa-cogs me-2"></i>
+                                {{ texts.settings }}
+                            </h1>
+                            <p class="text-muted mb-0">Tizim sozlamalari va profil boshqaruvi</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3 text-muted">
+                                <i class="fas fa-user-shield me-2"></i>
+                                {{ session.role|replace('_', ' ')|title if session.role else 'Admin' }}
+                            </span>
+                            <div class="user-avatar">
+                                {{ username[0]|upper }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4 fade-in">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stats-number">{{ admins|length }}</div>
+                            <div class="stats-label">Adminlar</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="stats-number">{{ stats.total_regions }}</div>
+                            <div class="stats-label">Viloyatlar</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <div class="stats-number">{{ stats.total_districts }}</div>
+                            <div class="stats-label">Tumanlar</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="stats-number">{{ stats.total_neighborhoods }}</div>
+                            <div class="stats-label">MFYlar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Settings -->
+                <div class="card settings-card fade-in">
+                    <div class="settings-header">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-user-cog me-2"></i>
+                            {{ texts.profile_settings }}
+                        </h5>
+                        <p class="mb-0 opacity-90 mt-1">Shaxsiy ma'lumotlaringiz va xavfsizlik sozlamalari</p>
+                    </div>
+                    <div class="settings-body">
+                        <form id="passwordForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Foydalanuvchi nomi</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control" value="{{ username }}" readonly>
+                                        </div>
+                                        <div class="form-text">Foydalanuvchi nomini o'zgartirish uchun pastdagi bo'limdan foydalaning</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Joriy parol</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control" name="current_password" placeholder="Joriy parolingizni kiriting" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Yangi parol</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                            <input type="password" class="form-control" name="new_password" id="newPassword" placeholder="Yangi parol kiriting" required onkeyup="checkPasswordStrength()">
+                                        </div>
+                                        <div class="password-strength" id="passwordStrength"></div>
+                                        <div class="form-text">Parol kamida 8 belgidan iborat bo'lishi kerak</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Yangi parolni tasdiqlang</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                                            <input type="password" class="form-control" name="confirm_password" id="confirmPassword" placeholder="Yangi parolni qayta kiriting" required onkeyup="checkPasswordMatch()">
+                                        </div>
+                                        <div class="form-text text-danger" id="passwordMatch" style="display: none;">
+                                            <i class="fas fa-exclamation-circle me-1"></i> Parollar mos kelmadi
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="button" class="btn btn-primary" onclick="updatePassword()">
+                                        <i class="fas fa-save me-2"></i>
+                                        Parolni yangilash
+                                    </button>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="security-tips">
+                                        <h6 class="fw-bold text-primary mb-3">
+                                            <i class="fas fa-shield-alt me-2"></i>
+                                            Parol xavfsizligi
+                                        </h6>
+                                        <div class="tip-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Kamida 8 ta belgidan iborat bo'lsin</span>
+                                        </div>
+                                        <div class="tip-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Katta va kichik harflardan foydalaning</span>
+                                        </div>
+                                        <div class="tip-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Raqamlar va maxsus belgilar qo'shing</span>
+                                        </div>
+                                        <div class="tip-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Oldingi parollaringizga o'xshamasligiga ishonch hosil qiling</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Login o'zgartirish bo'limi -->
+                                    <div class="login-change-section mt-4">
+                                        <h6 class="fw-bold text-info mb-3">
+                                            <i class="fas fa-user-edit me-2"></i>
+                                            Login o'zgartirish
+                                        </h6>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Yangi login</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-user-edit"></i></span>
+                                                <input type="text" class="form-control" name="new_username" id="newUsername" placeholder="Yangi login kiriting">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Login o'zgartirish uchun parol</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                                <input type="password" class="form-control" name="username_change_password" placeholder="Parolingizni kiriting">
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-info" onclick="updateUsername()">
+                                            <i class="fas fa-user-edit me-2"></i>
+                                            Loginni yangilash
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Language Settings -->
+                <div class="card settings-card fade-in">
+                    <div class="settings-header">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-language me-2"></i>
+                            {{ texts.language_settings }}
+                        </h5>
+                        <p class="mb-0 opacity-90 mt-1">Tizim tilini o'zgartirish</p>
+                    </div>
+                    <div class="settings-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tilni tanlang</label>
+                                    <select class="form-select" id="languageSelect" onchange="changeLanguage(this.value)">
+                                        <option value="uz" {% if language == 'uz' %}selected{% endif %}>
+                                            O'zbekcha
+                                        </option>
+                                        <option value="ru" {% if language == 'ru' %}selected{% endif %}>
+                                            Русский
+                                        </option>
+                                        <option value="en" {% if language == 'en' %}selected{% endif %}>
+                                            English
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center p-4 rounded" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <i class="fas fa-globe fa-3x mb-3"></i>
+                                    <h6 class="mb-1">Joriy til</h6>
+                                    <h4 class="fw-bold mb-0">
+                                        {% if language == 'uz' %}O'zbekcha
+                                        {% elif language == 'ru' %}Русский
+                                        {% elif language == 'en' %}English
+                                        {% endif %}
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Management -->
+                {% if session.role == 'super_admin' %}
+                <div class="card settings-card fade-in">
+                    <div class="settings-header">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-users-cog me-2"></i>
+                            {{ texts.admin_management }}
+                        </h5>
+                        <p class="mb-0 opacity-90 mt-1">Administratorlarni boshqarish</p>
+                    </div>
+                    <div class="settings-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Yangi admin qo'shish
+                            </button>
+                            <span class="badge bg-primary fs-6 p-2">
+                                {{ admins|length }} ta admin
+                            </span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Login</th>
+                                        <th>Rol</th>
+                                        <th>Email</th>
+                                        <th>Telefon</th>
+                                        <th>Oxirgi kirish</th>
+                                        <th>Holat</th>
+                                        <th>Amallar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for login, admin in admins.items() %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="user-avatar me-3">
+                                                    {{ login[0]|upper }}
+                                                </div>
+                                                <div>
+                                                    <strong>{{ login }}</strong>
+                                                    {% if login == username %}
+                                                    <span class="badge bg-info ms-2">Siz</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge {% if admin.role == 'super_admin' %}bg-danger{% else %}bg-primary{% endif %}">
+                                                {{ admin.role|replace('_', ' ')|title }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if admin.email %}
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-envelope text-muted me-2"></i>
+                                                {{ admin.email }}
+                                            </div>
+                                            {% else %}
+                                            <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if admin.phone %}
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-phone text-muted me-2"></i>
+                                                {{ admin.phone }}
+                                            </div>
+                                            {% else %}
+                                            <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if admin.last_login %}
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-clock text-muted me-2"></i>
+                                                {{ admin.last_login[:16]|replace('T', ' ') }}
+                                            </div>
+                                            {% else %}
+                                            <span class="text-muted">Hali kirgani yo'q</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="status-badge {% if admin.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                                {% if admin.is_active %}
+                                                <i class="fas fa-check-circle me-1"></i> Faol
+                                                {% else %}
+                                                <i class="fas fa-pause-circle me-1"></i> Nofaol
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if login != username %}
+                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteAdmin('{{ login }}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- System Information -->
+                <div class="card settings-card fade-in">
+                    <div class="settings-header">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Tizim ma'lumotlari
+                        </h5>
+                        <p class="mb-0 opacity-90 mt-1">Tizim holati va statistik ma'lumotlar</p>
+                    </div>
+                    <div class="settings-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="system-info-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="fw-bold mb-0">Asosiy ma'lumotlar</h5>
+                                        <i class="fas fa-server fa-2x opacity-50"></i>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <span>Tizim nomi:</span>
+                                        <strong>{{ settings.system_name }}</strong>
+                                    </div>
+                                    <div class="info-item">
+                                        <span>Versiya:</span>
+                                        <strong>1.0.0</strong>
+                                    </div>
+                                    <div class="info-item">
+                                        <span>Faol adminlar:</span>
+                                        <strong>{{ active_admins }}</strong>
+                                    </div>
+                                    <div class="info-item">
+                                        <span>Jami viloyatlar:</span>
+                                        <strong>{{ stats.total_regions }}</strong>
+                                    </div>
+                                    <div class="info-item">
+                                        <span>Jami tumanlar:</span>
+                                        <strong>{{ stats.total_districts }}</strong>
+                                    </div>
+                                    <div class="info-item">
+                                        <span>Jami MFYlar:</span>
+                                        <strong>{{ stats.total_neighborhoods }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="p-4 rounded" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="fw-bold mb-0">Tizim holati</h5>
+                                        <i class="fas fa-shield-alt fa-2x opacity-50"></i>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Ma'lumotlar bazasi</span>
+                                            <span>100%</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px; background: rgba(255,255,255,0.3);">
+                                            <div class="progress-bar bg-success" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Xavfsizlik</span>
+                                            <span>100%</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px; background: rgba(255,255,255,0.3);">
+                                            <div class="progress-bar bg-success" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Bot holati</span>
+                                            <span>Faol</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px; background: rgba(255,255,255,0.3);">
+                                            <div class="progress-bar bg-success" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4">
+                                        <span class="badge bg-success fs-6 p-2">
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            Tizim mukammal ishlamoqda
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Admin Modal -->
+    {% if session.role == 'super_admin' %}
+    <div class="modal fade" id="addAdminModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Yangi admin qo'shish
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addAdminForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Login</label>
+                            <input type="text" class="form-control" name="login" placeholder="Admin loginini kiriting" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Parol</label>
+                            <input type="password" class="form-control" name="password" placeholder="Parol kiriting" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Rol</label>
+                            <select class="form-select" name="role" required>
+                                <option value="moderator">Moderator</option>
+                                <option value="admin">Admin</option>
+                                <option value="super_admin">Super Admin</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" name="email" placeholder="example@mail.uz">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Telefon</label>
+                            <input type="tel" class="form-control" name="phone" placeholder="+998-90-123-45-67">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        {{ texts.cancel }}
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addAdmin()">
+                        <i class="fas fa-save me-2"></i>
+                        {{ texts.save }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Notification system
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notif => notif.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `custom-notification alert alert-${type} alert-dismissible fade show`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+            
+            const icons = {
+                'success': 'check-circle',
+                'danger': 'exclamation-triangle',
+                'warning': 'exclamation-circle',
+                'info': 'info-circle'
+            };
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${icons[type]} me-2"></i>
+                    <span class="flex-grow-1">${message}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Password strength checker
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength += 25;
+            
+            // Lowercase and uppercase check
+            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 25;
+            
+            // Numbers check
+            if (password.match(/([0-9])/)) strength += 25;
+            
+            // Special characters check
+            if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength += 25;
+            
+            // Update strength bar
+            strengthBar.className = 'password-strength';
+            
+            if (strength <= 25) {
+                strengthBar.classList.add('password-weak');
+            } else if (strength <= 50) {
+                strengthBar.classList.add('password-medium');
+            } else if (strength <= 75) {
+                strengthBar.classList.add('password-strong');
+            } else {
+                strengthBar.classList.add('password-very-strong');
+            }
+        }
+
+        // Password match checker
+        function checkPasswordMatch() {
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const matchText = document.getElementById('passwordMatch');
+            
+            if (confirmPassword.length > 0) {
+                if (password === confirmPassword) {
+                    matchText.style.display = 'none';
+                } else {
+                    matchText.style.display = 'block';
+                }
+            } else {
+                matchText.style.display = 'none';
+            }
+        }
+
+        // Update password function
+        async function updatePassword() {
+            const form = document.getElementById('passwordForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // Validation
+            if (data.new_password !== data.confirm_password) {
+                showNotification('Parollar mos kelmadi', 'danger');
+                return;
+            }
+            
+            if (data.new_password.length < 8) {
+                showNotification('Parol kamida 8 belgidan iborat bo\'lishi kerak', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/update_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        current_password: data.current_password,
+                        new_password: data.new_password,
+                        confirm_password: data.confirm_password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    form.reset();
+                    document.getElementById('passwordStrength').className = 'password-strength';
+                    document.getElementById('passwordMatch').style.display = 'none';
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Update username function
+        async function updateUsername() {
+            const newUsername = document.getElementById('newUsername').value;
+            const password = document.querySelector('input[name="username_change_password"]').value;
+            
+            if (!newUsername || !password) {
+                showNotification('Yangi login va parol kiritilishi shart', 'warning');
+                return;
+            }
+            
+            if (newUsername.length < 3) {
+                showNotification('Login kamida 3 belgidan iborat bo\'lishi kerak', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/update_username', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        new_username: newUsername,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    document.getElementById('newUsername').value = '';
+                    document.querySelector('input[name="username_change_password"]').value = '';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Change language function
+        async function changeLanguage(language) {
+            try {
+                const response = await fetch('/admin/change_language', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ language: language })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Add admin function
+        async function addAdmin() {
+            const form = document.getElementById('addAdminForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/admin/add_admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addAdminModal'));
+                    modal.hide();
+                    form.reset();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Delete admin function
+        async function deleteAdmin(login) {
+            if (!confirm(`"${login}" adminini o'chirishni tasdiqlaysizmi?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/delete_admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ login: login })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation delays
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

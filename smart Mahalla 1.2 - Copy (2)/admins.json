@@ -1,0 +1,20 @@
+{
+  "humoyun": {
+    "password": "scrypt:32768:8:1$Ny6f4MuOIeMgwxEa$d758a905ea1f7d926bd534716e69b0ca006b3120d51ae67e55bba927cb2af335892a3ade9d209a720de71cad6f1700839905290288f365fbcaf616a500ffa1c0",
+    "role": "super_admin",
+    "email": "admin@mahallah.uz",
+    "phone": "+998933320335",
+    "created_at": "2025-10-05T09:39:17.092588",
+    "last_login": "2025-10-06T12:20:57.195625",
+    "is_active": true
+  },
+  "hokim": {
+    "password": "scrypt:32768:8:1$opME1GawdfImskSl$7931811a9cbfbbe89d84b97339667bd5ab970ca81392b324cfe1e49ead865f21a88e373b0cee5ed30ae98acd37c9eef5641c6d90c1a46ad307c7411e084c3136",
+    "role": "admin",
+    "email": "humoyun2009uzb@gmail.com",
+    "phone": "+998 33 492 02 34",
+    "created_at": "2025-10-06T12:38:37.045669",
+    "last_login": "2025-10-15T22:44:01.347354",
+    "is_active": true
+  }
+}

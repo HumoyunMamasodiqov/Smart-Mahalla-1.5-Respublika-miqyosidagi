@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.activity }} - Smart Mahallah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            background: #2c3e50;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .activity-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .activity-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+        
+        .activity-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+        
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 2px solid white;
+        }
+        
+        .activity-time {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0 ">
+                <div class="p-3 ">
+                    <!-- Logo -->
+                    <div class="text-center mb-4 py-3">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-city fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Smart Mahallah</h5>
+                        <small class="text-light opacity-75">Admin Panel</small>
+                    </div>
+                    
+                    <!-- Navigation Menu -->
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link ">
+                                <i class="fas fa-tachometer-alt me-3"></i>
+                                {{ texts.dashboard }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/viloyatlar" class="nav-link">
+                                <i class="fas fa-map-marker-alt me-3"></i>
+                                {{ texts.regions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/tumanlar" class="nav-link">
+                                <i class="fas fa-map me-3"></i>
+                                {{ texts.districts }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/mfylar" class="nav-link">
+                                <i class="fas fa-home me-3"></i>
+                                {{ texts.neighborhoods }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/lavozimlar" class="nav-link">
+                                <i class="fas fa-users me-3"></i>
+                                {{ texts.positions }}
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a href="/admin/faoliyat" class="nav-link active">
+                                <i class="fas fa-history me-3"></i>
+                                {{ texts.activity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sozlamalar" class="nav-link">
+                                <i class="fas fa-cogs me-3"></i>
+                                {{ texts.settings }}
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4 bg-light opacity-25">
+                    
+                    <!-- User Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded" 
+                           data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.1);">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ username }}</strong>
+                                <small class="opacity-75">
+                                    {% if session.role %}
+                                        {{ session.role|replace('_', ' ')|title }}
+                                    {% else %}
+                                        Admin
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow">
+                            <li>
+                                <a class="dropdown-item" href="/admin/sozlamalar">
+                                    <i class="fas fa-user-cog me-2"></i>
+                                    {{ texts.profile_settings }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    {{ texts.logout }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto px-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>{{ texts.activity }}</h2>
+                    <div class="text-muted">
+                        <i class="fas fa-clock me-2"></i>
+                        Oxirgi 50 ta faoliyat
+                    </div>
+                </div>
+
+                <!-- Activity Timeline -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-list-ul me-2"></i>
+                            Tizim faoliyati
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if activities %}
+                        <div class="activity-timeline">
+                            {% for activity in activities|reverse %}
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0 text-primary">{{ activity.action }}</h6>
+                                    <div class="activity-time">
+                                        <small>{{ activity.date_display }} {{ activity.time_display }}</small>
+                                    </div>
+                                </div>
+                                <p class="mb-1">{{ activity.details }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i>
+                                        {{ activity.username }}
+                                    </small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Hozircha faoliyat yo'q</h5>
+                            <p class="text-muted">Tizimda bajarilgan amallar shu yerda ko'rsatiladi</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: smart-mahalla
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot_with_admin_fixed.py
+    envVars:
+      - key: BOT_TOKEN
+        value: "7953323094:AAE81rkkc8oAb5tp8W2dTCLJy55NRxlm_rs"
+      - key: SECRET_KEY
+        value: "smart-mahallah-secret-key-2024-render"
+      - key: PYTHON_VERSION
+        value: "3.11.0"

@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.dashboard }} - Smart Mahallah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #17a2b8;
+        }
+        
+        .sidebar {
+            background: var(--primary-color);
+            min-height: auto;
+            color: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .stat-card {
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card.users { 
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .stat-card.regions { 
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .stat-card.districts { 
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .stat-card.neighborhoods { 
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+        
+        .stat-card.staff { 
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .stat-card.admins { 
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+        
+        .activity-item {
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 12px 0;
+            background: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--secondary-color);
+        }
+        
+        .activity-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.15);
+        }
+        
+        .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.15);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 2px solid #f8f9fa;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px 25px;
+        }
+        
+        .system-status {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .quick-action-btn {
+            border: 2px dashed #dee2e6;
+            background: #f8f9fa;
+            color: #6c757d;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .quick-action-btn:hover {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+            background: rgba(52, 152, 219, 0.05);
+            transform: translateY(-3px);
+            text-decoration: none;
+        }
+        
+        .user-welcome {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .custom-notification {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Yangi qo'shilgan stillar */
+        .main-content {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+        }
+        
+        .dropdown-menu {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Lavozim tanlash uchun yangi stillar */
+        .lavozim-info {
+            border-left: 4px solid #17a2b8;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 0;
+        }
+
+        .lavozim-info h6 {
+            color: #17a2b8;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .custom-lavozim-input {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="p-3">
+                    <!-- Logo -->
+                    <div class="text-center mb-4 py-3">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-city fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Smart Mahallah</h5>
+                        <small class="text-light opacity-75">Admin Panel</small>
+                    </div>
+                    
+                    <!-- Navigation Menu -->
+                    <ul class="nav nav-pills flex-column mb-auto">\
+                        <!-- templates/admin_dashboard.html va boshqa sahifalarda -->
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link active">
+                                <i class="fas fa-tachometer-alt me-3"></i>
+                                {{ texts.dashboard }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/viloyatlar" class="nav-link">
+                                <i class="fas fa-map-marker-alt me-3"></i>
+                                {{ texts.regions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/tumanlar" class="nav-link">
+                                <i class="fas fa-map me-3"></i>
+                                {{ texts.districts }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/mfylar" class="nav-link">
+                                <i class="fas fa-home me-3"></i>
+                                {{ texts.neighborhoods }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/lavozimlar" class="nav-link">
+                                <i class="fas fa-users me-3"></i>
+                                {{ texts.positions }}
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a href="/admin/faoliyat" class="nav-link">
+                                <i class="fas fa-history me-3"></i>
+                                {{ texts.activity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sozlamalar" class="nav-link">
+                                <i class="fas fa-cogs me-3"></i>
+                                {{ texts.settings }}
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4 bg-light opacity-25">
+                    
+                    <!-- User Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded" 
+                           data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.1);">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ username }}</strong>
+                                <small class="opacity-75">
+                                    {% if session.role %}
+                                        {{ session.role|replace('_', ' ')|title }}
+                                    {% else %}
+                                        Admin
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow">
+                            <li>
+                                <a class="dropdown-item" href="/admin/sozlamalar">
+                                    <i class="fas fa-user-cog me-2"></i>
+                                    {{ texts.profile_settings }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    {{ texts.logout }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto px-4 py-4 main-content">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1">{{ texts.dashboard }}</h2>
+                        <p class="text-muted mb-0">Smart Mahallah tizimining boshqaruv paneli</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3 text-muted">
+                            <i class="fas fa-clock me-2"></i>
+                            <span id="current-time">{{ now }}</span>
+                        </span>
+                        <div class="system-status">
+                            <i class="fas fa-circle me-1"></i>
+                            {{ texts.system_online }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Card -->
+                <div class="user-welcome fade-in">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="fw-bold mb-2">Xush kelibsiz, {{ username }}! 👋</h3>
+                            <p class="mb-0 opacity-90">Smart Mahallah tizimida barcha ma'lumotlarni boshqarishingiz mumkin</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-rocket fa-4x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row fade-in">
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="stat-card regions">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_regions }}</h3>
+                                    <p class="mb-0 opacity-90">{{ texts.total_regions }}</p>
+                                </div>
+                                <i class="fas fa-map-marker-alt fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-layer-group me-1"></i>
+                                    Barcha viloyatlar
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="stat-card districts">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_districts }}</h3>
+                                    <p class="mb-0 opacity-90">{{ texts.total_districts }}</p>
+                                </div>
+                                <i class="fas fa-map fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-city me-1"></i>
+                                    Tuman va shaharlar
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="stat-card neighborhoods">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_neighborhoods }}</h3>
+                                    <p class="mb-0 opacity-90">{{ texts.total_neighborhoods }}</p>
+                                </div>
+                                <i class="fas fa-home fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-building me-1"></i>
+                                    Faol MFYlar
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="stat-card staff">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_staff }}</h3>
+                                    <p class="mb-0 opacity-90">Xodimlar</p>
+                                </div>
+                                <i class="fas fa-user-tie fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-users-cog me-1"></i>
+                                    Jami ishchilar
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="stat-card admins">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ active_admins }}</h3>
+                                    <p class="mb-0 opacity-90">Adminlar</p>
+                                </div>
+                                <i class="fas fa-user-shield fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-user-check me-1"></i>
+                                    Faol adminlar
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions & Activity -->
+                <div class="row mt-4 fade-in">
+                    <!-- Quick Actions -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0 fw-bold">
+                                    <i class="fas fa-bolt text-warning me-2"></i>
+                                    {{ texts.quick_actions }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <button class="quick-action-btn" data-bs-toggle="modal" data-bs-target="#addRegionModal">
+                                            <i class="fas fa-plus-circle fa-2x mb-3"></i>
+                                            <h6 class="fw-bold">{{ texts.add_region }}</h6>
+                                            <small class="text-muted">Yangi viloyat qo'shish</small>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="quick-action-btn" data-bs-toggle="modal" data-bs-target="#addDistrictModal">
+                                            <i class="fas fa-plus-square fa-2x mb-3"></i>
+                                            <h6 class="fw-bold">{{ texts.add_district }}</h6>
+                                            <small class="text-muted">Yangi tuman/shahar</small>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="quick-action-btn" data-bs-toggle="modal" data-bs-target="#addMahallaModal">
+                                            <i class="fas fa-plus fa-2x mb-3"></i>
+                                            <h6 class="fw-bold">{{ texts.add_neighborhood }}</h6>
+                                            <small class="text-muted">Yangi MFY qo'shish</small>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="quick-action-btn" data-bs-toggle="modal" data-bs-target="#addXodimModal">
+                                            <i class="fas fa-user-plus fa-2x mb-3"></i>
+                                            <h6 class="fw-bold">{{ texts.add_staff }}</h6>
+                                            <small class="text-muted">Yangi xodim qo'shish</small>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Quick Links -->
+                                <div class="mt-4 pt-3 border-top">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <a href="/admin/viloyatlar" class="btn btn-outline-primary w-100">
+                                                <i class="fas fa-list me-2"></i>
+                                                Barcha viloyatlar
+                                            </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="/admin/lavozimlar" class="btn btn-outline-success w-100">
+                                                <i class="fas fa-users me-2"></i>
+                                                Xodimlarni ko'rish
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 fw-bold">
+                                    <i class="fas fa-history text-info me-2"></i>
+                                    So'nggi Faoliyat
+                                </h5>
+                                <a href="/admin/faoliyat" class="btn btn-sm btn-outline-primary">
+                                    Barchasini ko'rish
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                {% if activities %}
+                                    <div style="max-height: 400px; overflow-y: auto;">
+                                        {% for activity in activities %}
+                                        <div class="activity-item">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <strong class="text-primary">{{ activity.action }}</strong>
+                                                <small class="text-muted">{{ activity.time_display }}</small>
+                                            </div>
+                                            <p class="mb-2 text-dark">{{ activity.details }}</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-user me-1"></i>
+                                                    {{ activity.username }}
+                                                </small>
+                                                <small class="text-muted">{{ activity.date_display }}</small>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-5">
+                                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">Hozircha faoliyat yo'q</h5>
+                                        <p class="text-muted">Tizimda bajarilgan amallar shu yerda ko'rsatiladi</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status & Charts -->
+                <div class="row mt-4 fade-in">
+                    <!-- System Status -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0 fw-bold">
+                                    <i class="fas fa-server text-success me-2"></i>
+                                    {{ texts.system_status }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 rounded bg-light">
+                                            <i class="fas fa-database fa-2x text-primary mb-2"></i>
+                                            <h6>Ma'lumotlar Bazasi</h6>
+                                            <span class="badge bg-success">Faol</span>
+                                            <small class="d-block text-muted mt-1">{{ stats.total_regions }} viloyat</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 rounded bg-light">
+                                            <i class="fas fa-robot fa-2x text-primary mb-2"></i>
+                                            <h6>Telegram Bot</h6>
+                                            <span class="badge bg-success">Ishlayapti</span>
+                                            <small class="d-block text-muted mt-1">@SmartMahallahBot</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 rounded bg-light">
+                                            <i class="fas fa-shield-alt fa-2x text-primary mb-2"></i>
+                                            <h6>Xavfsizlik</h6>
+                                            <span class="badge bg-success">Faol</span>
+                                            <small class="d-block text-muted mt-1">SSL sertifikati</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 rounded bg-light">
+                                            <i class="fas fa-users-cog fa-2x text-primary mb-2"></i>
+                                            <h6>Adminlar</h6>
+                                            <span class="badge bg-success">{{ active_admins }} faol</span>
+                                            <small class="d-block text-muted mt-1">Tizim administratorlari</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progress Bars -->
+                                <div class="mt-4">
+                                    <h6 class="fw-bold mb-3">Tizim resurslari</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Ma'lumotlar bazasi</span>
+                                            <span>85%</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Xotira</span>
+                                            <span>62%</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-info" style="width: 62%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>CPU</span>
+                                            <span>45%</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0 fw-bold">
+                                    <i class="fas fa-chart-pie text-primary me-2"></i>
+                                    Tezkor Statistika
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <canvas id="statsChart" width="200" height="200"></canvas>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span>Viloyatlar</span>
+                                        <span class="fw-bold text-primary">{{ stats.total_regions }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span>Tumanlar</span>
+                                        <span class="fw-bold text-success">{{ stats.total_districts }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span>MFYlar</span>
+                                        <span class="fw-bold text-warning">{{ stats.total_neighborhoods }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>Xodimlar</span>
+                                        <span class="fw-bold text-danger">{{ stats.total_staff }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Region Modal -->
+    <div class="modal fade" id="addRegionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ texts.add_region }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRegionForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Viloyat nomi</label>
+                            <input type="text" class="form-control" name="viloyat_nomi" placeholder="Masalan: Toshkent viloyati" required>
+                            <div class="form-text">Yangi viloyat nomini kiriting</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        {{ texts.cancel }}
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addViloyat()">
+                        <i class="fas fa-save me-2"></i>
+                        {{ texts.save }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add District Modal -->
+    <div class="modal fade" id="addDistrictModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-map me-2"></i>
+                        {{ texts.add_district }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDistrictForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Viloyat</label>
+                            <select class="form-select" name="viloyat_nomi" id="viloyatSelect" required>
+                                <option value="">Tanlang...</option>
+                                {% for viloyat in data.keys() %}
+                                <option value="{{ viloyat }}">{{ viloyat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tuman/Shahar turi</label>
+                            <select class="form-select" name="tuman_turi" required>
+                                <option value="tuman">Tuman</option>
+                                <option value="shahar">Shahar</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nomi</label>
+                            <input type="text" class="form-control" name="tuman_nomi" placeholder="Masalan: Mirzo Ulug'bek tumani" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        {{ texts.cancel }}
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addTuman()">
+                        <i class="fas fa-save me-2"></i>
+                        {{ texts.save }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Mahalla Modal -->
+    <div class="modal fade" id="addMahallaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-home me-2"></i>
+                        {{ texts.add_neighborhood }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMahallaForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Viloyat</label>
+                            <select class="form-select" name="viloyat_nomi" id="mahallaViloyatSelect" onchange="loadTumanlar(this.value, 'mahallaTumanSelect')" required>
+                                <option value="">Tanlang...</option>
+                                {% for viloyat in data.keys() %}
+                                <option value="{{ viloyat }}">{{ viloyat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tuman/Shahar</label>
+                            <select class="form-select" name="tuman_nomi" id="mahallaTumanSelect" required>
+                                <option value="">Avval viloyat tanlang</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">MFY nomi</label>
+                            <input type="text" class="form-control" name="mahalla_nomi" placeholder="Masalan: Traktorsozlar MFY" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        {{ texts.cancel }}
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addMahalla()">
+                        <i class="fas fa-save me-2"></i>
+                        {{ texts.save }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Xodim Modal - YANGILANGAN -->
+    <div class="modal fade" id="addXodimModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>
+                        {{ texts.add_staff }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addXodimForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Viloyat</label>
+                            <select class="form-select" name="viloyat_nomi" id="xodimViloyatSelect" onchange="loadTumanlar(this.value, 'xodimTumanSelect')" required>
+                                <option value="">Tanlang...</option>
+                                {% for viloyat in data.keys() %}
+                                <option value="{{ viloyat }}">{{ viloyat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tuman/Shahar</label>
+                            <select class="form-select" name="tuman_nomi" id="xodimTumanSelect" onchange="loadMahallalar(this.value, 'xodimMahallaSelect')" required>
+                                <option value="">Avval viloyat tanlang</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">MFY</label>
+                            <select class="form-select" name="mahalla_nomi" id="xodimMahallaSelect" required>
+                                <option value="">Avval tuman tanlang</option>
+                            </select>
+                        </div>
+                        
+                        <!-- YANGI: Lavozim tanlash qismi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Lavozim</label>
+                            <select class="form-select" name="lavozim" id="lavozimSelect" required onchange="showLavozimInfo(this.value)">
+                                <option value="">Lavozimni tanlang...</option>
+                                <option value="hokim">Hokim</option>
+                                <option value="hokim_yordamchisi">Hokim Yordamchisi</option>
+                                <option value="mfy_raisi">MFY Raisi</option>
+                                <option value="iib_inspektori">IIB Inspektori</option>
+                                <option value="yoshlar_yetakchisi">Yoshlar Yetakchisi</option>
+                                <option value="2-sektor_rahbari">2-Sektor Rahbari</option>
+                                <option value="custom">Boshqa lavozim...</option>
+                            </select>
+                        </div>
+                        
+                        <!-- YANGI: Boshqa lavozim kiritish -->
+                        <div class="mb-3 custom-lavozim-input" id="customLavozimDiv" style="display: none;">
+                            <label class="form-label fw-bold">Lavozim nomi</label>
+                            <input type="text" class="form-control" name="custom_lavozim" id="customLavozimInput" placeholder="Masalan: Iqtisodchi, Statist...">
+                        </div>
+                        
+                        <!-- YANGI: Lavozim ma'lumotlari -->
+                        <div class="lavozim-info" id="lavozimInfo" style="display: none;">
+                            <h6><i class="fas fa-info-circle me-2"></i>Lavozim haqida:</h6>
+                            <p class="mb-1" id="lavozimDescription"></p>
+                            <small class="text-muted" id="lavozimRequirements"></small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ism Familiya</label>
+                            <input type="text" class="form-control" name="ism" placeholder="Masalan: Ali Valiyev" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Telefon raqami</label>
+                            <input type="tel" class="form-control" name="telefon" placeholder="+998-90-123-45-67" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" name="email" placeholder="example@mail.uz">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        {{ texts.cancel }}
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addXodim()">
+                        <i class="fas fa-save me-2"></i>
+                        {{ texts.save }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Lavozim ma'lumotlari
+        const LAVOZIM_MALUMOTLARI = {
+            'hokim': {
+                'nomi': 'Hokim',
+                'tavsif': 'Tuman/Shahar boshlig\'i',
+                'talablar': 'Oliy ma\'lumot, kamida 5 yillik boshqaruv tajribasi'
+            },
+            'hokim_yordamchisi': {
+                'nomi': 'Hokim Yordamchisi',
+                'tavsif': 'Hokimga yordam beruvchi',
+                'talablar': 'Oliy ma\'lumot, kamida 3 yillik boshqaruv tajribasi'
+            },
+            'mfy_raisi': {
+                'nomi': 'MFY Raisi',
+                'tavsif': 'Mahalla fuqarolar yig\'ini raisi',
+                'talablar': 'Oliy ma\'lumot, kamida 2 yillik ijtimoiy soha tajribasi'
+            },
+            'iib_inspektori': {
+                'nomi': 'IIB Inspektori',
+                'tavsif': 'Ichki ishlar bo\'limi inspektori',
+                'talablar': 'Huquqiy ma\'lumot, maxsus tayyorgarlik'
+            },
+            'yoshlar_yetakchisi': {
+                'nomi': 'Yoshlar Yetakchisi',
+                'tavsif': 'Yoshlar siyosati va ishlari bo\'yicha mas\'ul',
+                'talablar': 'Yoshlar bilan ishlash tajribasi, kommunikativlik'
+            },
+            '2-sektor_rahbari': {
+                'nomi': '2-Sektor Rahbari',
+                'tavsif': 'Ijtimoiy rivojlanish va infratuzilma bo\'limi rahbari',
+                'talablar': 'Ijtimoiy soha mutaxassisi, loyiha boshqaruv tajribasi'
+            }
+        };
+
+        // Lavozim tanlanganda ma'lumotlarni ko'rsatish
+        function showLavozimInfo(lavozimKey) {
+            const lavozimInfo = document.getElementById('lavozimInfo');
+            const customLavozimDiv = document.getElementById('customLavozimDiv');
+            
+            // Boshqa lavozim tanlangan bo'lsa
+            if (lavozimKey === 'custom') {
+                customLavozimDiv.style.display = 'block';
+                lavozimInfo.style.display = 'none';
+                return;
+            } else {
+                customLavozimDiv.style.display = 'none';
+            }
+            
+            // Tayyor lavozim tanlangan bo'lsa
+            if (lavozimKey && LAVOZIM_MALUMOTLARI[lavozimKey]) {
+                const malumot = LAVOZIM_MALUMOTLARI[lavozimKey];
+                document.getElementById('lavozimDescription').textContent = malumot.tavsif;
+                document.getElementById('lavozimRequirements').textContent = malumot.talablar;
+                lavozimInfo.style.display = 'block';
+            } else {
+                lavozimInfo.style.display = 'none';
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notif => notif.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `custom-notification alert alert-${type} alert-dismissible fade show`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+            
+            const icons = {
+                'success': 'check-circle',
+                'danger': 'exclamation-triangle',
+                'warning': 'exclamation-circle',
+                'info': 'info-circle'
+            };
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${icons[type]} me-2"></i>
+                    <span class="flex-grow-1">${message}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Tumanlarni yuklash funksiyasi
+        async function loadTumanlar(viloyat, selectId) {
+            if (!viloyat) {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Avval viloyat tanlang</option>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/admin/get_tumanlar?viloyat=${encodeURIComponent(viloyat)}`);
+                const tumanlar = await response.json();
+                
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Tanlang...</option>';
+                
+                tumanlar.forEach(tuman => {
+                    const option = document.createElement('option');
+                    option.value = tuman;
+                    option.textContent = tuman;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Tumanlarni yuklashda xatolik:', error);
+                showNotification('Tumanlarni yuklashda xatolik', 'danger');
+            }
+        }
+
+        // Mahallalarni yuklash funksiyasi
+        async function loadMahallalar(tuman, selectId) {
+            if (!tuman) {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Avval tuman tanlang</option>';
+                return;
+            }
+            
+            const viloyatSelect = document.getElementById('xodimViloyatSelect');
+            const viloyat = viloyatSelect.value;
+            
+            if (!viloyat) {
+                showNotification('Iltimos, avval viloyatni tanlang', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/admin/get_mahallalar?viloyat=${encodeURIComponent(viloyat)}&tuman=${encodeURIComponent(tuman)}`);
+                const mahallalar = await response.json();
+                
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Tanlang...</option>';
+                
+                mahallalar.forEach(mahalla => {
+                    const option = document.createElement('option');
+                    option.value = mahalla;
+                    option.textContent = mahalla;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('MFYlarni yuklashda xatolik:', error);
+                showNotification('MFYlarni yuklashda xatolik', 'danger');
+            }
+        }
+
+        // Viloyat qo'shish funksiyasi
+        async function addViloyat() {
+            const form = document.getElementById('addRegionForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.viloyat_nomi.trim()) {
+                showNotification('Viloyat nomini kiriting', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/add_viloyat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('addRegionModal')).hide();
+                    form.reset();
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Tuman qo'shish funksiyasi
+        async function addTuman() {
+            const form = document.getElementById('addDistrictForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.viloyat_nomi || !data.tuman_nomi.trim()) {
+                showNotification('Barcha maydonlarni to\'ldiring', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/add_tuman', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('addDistrictModal')).hide();
+                    form.reset();
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Mahalla qo'shish funksiyasi
+        async function addMahalla() {
+            const form = document.getElementById('addMahallaForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.viloyat_nomi || !data.tuman_nomi || !data.mahalla_nomi.trim()) {
+                showNotification('Barcha maydonlarni to\'ldiring', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/add_mahalla', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('addMahallaModal')).hide();
+                    form.reset();
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // Xodim qo'shish funksiyasi - YANGILANGAN
+        async function addXodim() {
+            const form = document.getElementById('addXodimForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // Lavozimni aniqlash
+            let lavozim = data.lavozim;
+            if (lavozim === 'custom') {
+                lavozim = data.custom_lavozim;
+                if (!lavozim || !lavozim.trim()) {
+                    showNotification('Boshqa lavozim uchun nom kiriting', 'warning');
+                    return;
+                }
+            }
+            
+            // Validatsiya
+            if (!data.viloyat_nomi || !data.tuman_nomi || !data.mahalla_nomi || !lavozim.trim() || !data.ism.trim() || !data.telefon.trim()) {
+                showNotification('Barcha kerakli maydonlarni to\'ldiring', 'warning');
+                return;
+            }
+            
+            // Ma'lumotlarni tayyorlash
+            const xodimData = {
+                viloyat_nomi: data.viloyat_nomi,
+                tuman_nomi: data.tuman_nomi,
+                mahalla_nomi: data.mahalla_nomi,
+                lavozim: lavozim,
+                ism: data.ism,
+                telefon: data.telefon,
+                email: data.email || ''
+            };
+            
+            try {
+                const response = await fetch('/admin/add_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(xodimData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('addXodimModal')).hide();
+                    form.reset();
+                    // Lavozim ma'lumotlarini yashirish
+                    document.getElementById('lavozimInfo').style.display = 'none';
+                    document.getElementById('customLavozimDiv').style.display = 'none';
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        // DOM yuklanganda bajariladigan funksiyalar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal yopilganda formlarni tozalash
+            const modals = ['addRegionModal', 'addDistrictModal', 'addMahallaModal', 'addXodimModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                modal.addEventListener('hidden.bs.modal', function() {
+                    const form = this.querySelector('form');
+                    if (form) form.reset();
+                    
+                    // Reset dependent selects
+                    if (modalId === 'addMahallaModal' || modalId === 'addXodimModal') {
+                        const tumanSelect = this.querySelector('select[name="tuman_nomi"]');
+                        const mahallaSelect = this.querySelector('select[name="mahalla_nomi"]');
+                        if (tumanSelect) tumanSelect.innerHTML = '<option value="">Avval viloyat tanlang</option>';
+                        if (mahallaSelect) mahallaSelect.innerHTML = '<option value="">Avval tuman tanlang</option>';
+                    }
+                    
+                    // Lavozim ma'lumotlarini tozalash
+                    if (modalId === 'addXodimModal') {
+                        document.getElementById('lavozimInfo').style.display = 'none';
+                        document.getElementById('customLavozimDiv').style.display = 'none';
+                    }
+                });
+            });
+            
+            // Animation delay qo'shish
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Real-time clock update
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // Chart initialization
+            initializeChart();
+        });
+
+        // Real-time clock update funksiyasi
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('uz-UZ', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+
+        // Chart initialization
+        function initializeChart() {
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            const stats = {
+                total_regions: {{ stats.total_regions }},
+                total_districts: {{ stats.total_districts }},
+                total_neighborhoods: {{ stats.total_neighborhoods }},
+                total_staff: {{ stats.total_staff }}
+            };
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Viloyatlar', 'Tumanlar', 'MFYlar', 'Xodimlar'],
+                    datasets: [{
+                        data: [stats.total_regions, stats.total_districts, stats.total_neighborhoods, stats.total_staff],
+                        backgroundColor: [
+                            '#3498db',
+                            '#27ae60', 
+                            '#f39c12',
+                            '#e74c3c'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+            showNotification('Unexpected error occurred', 'danger');
+        });
+    </script>
+</body>
+</html>

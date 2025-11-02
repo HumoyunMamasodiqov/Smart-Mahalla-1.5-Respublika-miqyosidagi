@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.staff_list }} - Smart Mahallah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            background: #2c3e50;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .table-actions .btn {
+            margin: 0 2px;
+        }
+        
+        .selection-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0 ">
+                <div class="p-3 ">
+                    <!-- Logo -->
+                    <div class="text-center mb-4 py-3">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-city fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Smart Mahallah</h5>
+                        <small class="text-light opacity-75">Admin Panel</small>
+                    </div>
+                    
+                    <!-- Navigation Menu -->
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link ">
+                                <i class="fas fa-tachometer-alt me-3"></i>
+                                {{ texts.dashboard }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/viloyatlar" class="nav-link">
+                                <i class="fas fa-map-marker-alt me-3"></i>
+                                {{ texts.regions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/tumanlar" class="nav-link ">
+                                <i class="fas fa-map me-3"></i>
+                                {{ texts.districts }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/mfylar" class="nav-link">
+                                <i class="fas fa-home me-3"></i>
+                                {{ texts.neighborhoods }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/lavozimlar" class="nav-link">
+                                <i class="fas fa-users me-3"></i>
+                                {{ texts.positions }}
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a href="/admin/faoliyat" class="nav-link ">
+                                <i class="fas fa-history me-3"></i>
+                                {{ texts.activity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sozlamalar" class="nav-link">
+                                <i class="fas fa-cogs me-3"></i>
+                                {{ texts.settings }}
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4 bg-light opacity-25">
+                    
+                    <!-- User Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded" 
+                           data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.1);">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ username }}</strong>
+                                <small class="opacity-75">
+                                    {% if session.role %}
+                                        {{ session.role|replace('_', ' ')|title }}
+                                    {% else %}
+                                        Admin
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow">
+                            <li>
+                                <a class="dropdown-item" href="/admin/sozlamalar">
+                                    <i class="fas fa-user-cog me-2"></i>
+                                    {{ texts.profile_settings }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    {{ texts.logout }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto px-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>{{ texts.staff_list }}</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addXodimModal">
+                        <i class="fas fa-plus me-2"></i>
+                        {{ texts.add_new_staff }}
+                    </button>
+                </div>
+
+                <!-- Selection Card -->
+                <div class="selection-card">
+                    <h5 class="mb-3">
+                        <i class="fas fa-filter me-2"></i>
+                        MFY tanlash
+                    </h5>
+                    <form method="GET" action="/admin/xodimlar" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Viloyat</label>
+                            <select class="form-select" name="viloyat" id="viloyatSelect" onchange="this.form.submit()">
+                                <option value="">Tanlang...</option>
+                                {% for viloyat in data.keys() %}
+                                <option value="{{ viloyat }}" {% if selected_viloyat == viloyat %}selected{% endif %}>{{ viloyat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tuman/Shahar</label>
+                            <select class="form-select" name="tuman" id="tumanSelect" onchange="this.form.submit()" {% if not selected_viloyat %}disabled{% endif %}>
+                                <option value="">Tanlang...</option>
+                                {% if selected_viloyat %}
+                                    {% for tuman in data[selected_viloyat]['tumanlar'].keys() %}
+                                    <option value="{{ tuman }}" {% if selected_tuman == tuman %}selected{% endif %}>{{ tuman }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">MFY</label>
+                            <select class="form-select" name="mahalla" id="mahallaSelect" onchange="this.form.submit()" {% if not selected_tuman %}disabled{% endif %}>
+                                <option value="">Tanlang...</option>
+                                {% if selected_viloyat and selected_tuman %}
+                                    {% for mahalla in data[selected_viloyat]['tumanlar'][selected_tuman]['mfylar'].keys() %}
+                                    <option value="{{ mahalla }}" {% if selected_mahalla == mahalla %}selected{% endif %}>{{ mahalla }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
+                {% if selected_viloyat and selected_tuman and selected_mahalla %}
+                <!-- Staff List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-users me-2"></i>
+                            {{ selected_viloyat }} - {{ selected_tuman }} - {{ selected_mahalla }} MFY xodimlari
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Lavozim</th>
+                                        <th>Ism</th>
+                                        <th>Telefon</th>
+                                        <th>Email</th>
+                                        <th>Holat</th>
+                                        <th>Harakatlar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lavozim, xodim in xodimlar.items() %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ lavozim.replace('_', ' ').title() }}</strong>
+                                        </td>
+                                        <td>{{ xodim.ism if xodim.ism else '&mdash;' }}</td>
+                                        <td>{{ xodim.telefon if xodim.telefon else '&mdash;' }}</td>
+                                        <td>{{ xodim.email if xodim.email else '&mdash;' }}</td>
+                                        <td>
+                                            <span class="badge {% if xodim.holat == 'faol' %}bg-success{% else %}bg-secondary{% endif %}">
+                                                {{ xodim.holat }}
+                                            </span>
+                                        </td>
+                                        <td class="table-actions">
+                                            {% if xodim.ism %}
+                                            <button class="btn btn-sm btn-outline-primary" 
+                                                    onclick="editXodim('{{ lavozim }}', '{{ xodim.ism }}', '{{ xodim.telefon }}', '{{ xodim.email }}')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" 
+                                                    onclick="deleteXodim('{{ lavozim }}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            {% else %}
+                                            <button class="btn btn-sm btn-outline-success" 
+                                                    onclick="addToThisPosition('{{ lavozim }}')">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% elif selected_viloyat or selected_tuman %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Iltimos, barcha maydonlarni to'ldiring: Viloyat → Tuman → MFY
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Xodimlarni ko'rish uchun viloyat, tuman va MFY ni tanlang
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div class="modal fade" id="addXodimModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ texts.add_new_staff }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addXodimForm">
+                        <div class="mb-3">
+                            <label class="form-label">Viloyat</label>
+                            <select class="form-select" name="viloyat_nomi" id="addXodimViloyat" onchange="loadTumanlarForAdd(this.value, 'addXodimTuman')" required>
+                                <option value="">Tanlang...</option>
+                                {% for viloyat in data.keys() %}
+                                <option value="{{ viloyat }}">{{ viloyat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tuman/Shahar</label>
+                            <select class="form-select" name="tuman_nomi" id="addXodimTuman" onchange="loadMahallalarForAdd(this.value, 'addXodimMahalla')" required>
+                                <option value="">Avval viloyat tanlang</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">MFY</label>
+                            <select class="form-select" name="mahalla_nomi" id="addXodimMahalla" required>
+                                <option value="">Avval tuman tanlang</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lavozim</label>
+                            <select class="form-select" name="lavozim" required>
+                                <option value="hokim">Hokim</option>
+                                <option value="2-sektor_rahbari">2-sektor rahbari</option>
+                                <option value="mfy_raisi">MFY raisi</option>
+                                <option value="iib_inspektori">IIB inspektori</option>
+                                <option value="hokim_yordamchisi">Hokim yordamchisi</option>
+                                <option value="yoshlar_yetakchisi">Yoshlar yetakchisi</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ism</label>
+                            <input type="text" class="form-control" name="ism" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" class="form-control" name="telefon" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ texts.cancel }}</button>
+                    <button type="button" class="btn btn-primary" onclick="addXodim()">{{ texts.save }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Staff Modal -->
+    <div class="modal fade" id="editXodimModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xodimni tahrirlash</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editXodimForm">
+                        <input type="hidden" name="viloyat_nomi" value="{{ selected_viloyat }}">
+                        <input type="hidden" name="tuman_nomi" value="{{ selected_tuman }}">
+                        <input type="hidden" name="mahalla_nomi" value="{{ selected_mahalla }}">
+                        <input type="hidden" name="lavozim" id="editLavozim">
+                        <div class="mb-3">
+                            <label class="form-label">Ism</label>
+                            <input type="text" class="form-control" name="ism" id="editIsm" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" class="form-control" name="telefon" id="editTelefon" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="editEmail">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ texts.cancel }}</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEditedXodim()">{{ texts.save }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Notification system
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notif => notif.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `custom-notification alert alert-${type} alert-dismissible fade show`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                    <span>${message}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Add CSS for animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            .custom-notification {
+                animation: slideInRight 0.3s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+
+        async function loadTumanlarForAdd(viloyat, selectId) {
+            if (!viloyat) return;
+            
+            const response = await fetch(`/admin/get_tumanlar?viloyat=${encodeURIComponent(viloyat)}`);
+            const tumanlar = await response.json();
+            
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Tanlang...</option>';
+            
+            tumanlar.forEach(tuman => {
+                const option = document.createElement('option');
+                option.value = tuman;
+                option.textContent = tuman;
+                select.appendChild(option);
+            });
+            
+            // Clear mahalla selection
+            document.getElementById('addXodimMahalla').innerHTML = '<option value="">Avval tuman tanlang</option>';
+        }
+
+        async function loadMahallalarForAdd(tuman, selectId) {
+            if (!tuman) return;
+            
+            const viloyatSelect = document.getElementById('addXodimViloyat');
+            const viloyat = viloyatSelect.value;
+            
+            const response = await fetch(`/admin/get_mahallalar?viloyat=${encodeURIComponent(viloyat)}&tuman=${encodeURIComponent(tuman)}`);
+            const mahallalar = await response.json();
+            
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Tanlang...</option>';
+            
+            mahallalar.forEach(mahalla => {
+                const option = document.createElement('option');
+                option.value = mahalla;
+                option.textContent = mahalla;
+                select.appendChild(option);
+            });
+        }
+
+        async function addXodim() {
+            const form = document.getElementById('addXodimForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/admin/add_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    $('#addXodimModal').modal('hide');
+                    form.reset();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        function editXodim(lavozim, ism, telefon, email) {
+            document.getElementById('editLavozim').value = lavozim;
+            document.getElementById('editIsm').value = ism || '';
+            document.getElementById('editTelefon').value = telefon || '';
+            document.getElementById('editEmail').value = email || '';
+            
+            $('#editXodimModal').modal('show');
+        }
+
+        async function saveEditedXodim() {
+            const form = document.getElementById('editXodimForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/admin/edit_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    $('#editXodimModal').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                showNotification('Xatolik yuz berdi', 'danger');
+            }
+        }
+
+        function deleteXodim(lavozim) {
+            if (confirm(`Ushbu xodimni o'chirishni tasdiqlaysizmi?`)) {
+                const data = {
+                    viloyat_nomi: '{{ selected_viloyat }}',
+                    tuman_nomi: '{{ selected_tuman }}',
+                    mahalla_nomi: '{{ selected_mahalla }}',
+                    lavozim: lavozim
+                };
+                
+                fetch('/admin/delete_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showNotification(result.message, 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showNotification(result.message, 'danger');
+                    }
+                })
+                .catch(error => {
+                    showNotification('Xatolik yuz berdi', 'danger');
+                });
+            }
+        }
+
+        function addToThisPosition(lavozim) {
+            // Pre-fill the add form with current selection
+            document.getElementById('addXodimViloyat').value = '{{ selected_viloyat }}';
+            loadTumanlarForAdd('{{ selected_viloyat }}', 'addXodimTuman').then(() => {
+                document.getElementById('addXodimTuman').value = '{{ selected_tuman }}';
+                loadMahallalarForAdd('{{ selected_tuman }}', 'addXodimMahalla').then(() => {
+                    document.getElementById('addXodimMahalla').value = '{{ selected_mahalla }}';
+                    document.querySelector('select[name="lavozim"]').value = lavozim;
+                    $('#addXodimModal').modal('show');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

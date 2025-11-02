@@ -1,0 +1,2494 @@
+<!-- <!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.regions }} - Smart Mahallah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #17a2b8;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            background: var(--primary-color);
+            min-height: 100vh;
+            color: white;
+          
+        }
+        
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .stat-card {
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card.regions { 
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .stat-card.districts { 
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .stat-card.neighborhoods { 
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .table-actions .btn {
+            margin: 0 2px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .table-actions .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 2px solid #f8f9fa;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px 25px;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: var(--primary-color);
+            padding: 15px 12px;
+            background: #f8f9fa;
+        }
+        
+        .table td {
+            padding: 15px 12px;
+            vertical-align: middle;
+            border-color: #f1f3f4;
+        }
+        
+        .badge {
+            font-size: 0.75em;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.15);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 0.75rem center !important;
+            background-size: 16px 12px !important;
+            padding-right: 2.5rem !important;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .custom-notification {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .search-box {
+            max-width: 300px;
+        }
+        
+        .region-type-badge {
+            font-size: 0.7em;
+            padding: 6px 10px;
+        }
+        
+        .region-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .progress-thin {
+            height: 4px;
+            border-radius: 2px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+        
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .region-details {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .detail-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .detail-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .back-button {
+            background: var(--secondary-color);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .back-button:hover {
+            background: #2980b9;
+            transform: translateX(-3px);
+            color: white;
+        }
+
+        .district-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--success-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .mfy-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--warning-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .staff-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--info-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .clickable-row {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clickable-row:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .page-container {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .navigation-history {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navigation-history .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .navigation-history .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navigation-history .breadcrumb-item.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .staff-table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Responsive dizayn */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar .nav-link span {
+                display: none;
+            }
+            
+            .sidebar .text-center .text-light {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-actions .btn {
+                margin: 2px;
+            }
+            
+            .search-box {
+                max-width: 100%;
+                margin-top: 10px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-content {
+                max-height: none;
+            }
+
+            .staff-table-container {
+                max-height: 400px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                min-height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0 ">
+                <div class="p-3 ">
+                    <!-- Logo -->
+                    <div class="text-center mb-4 py-3">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-city fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 fw-bold">Smart Mahallah</h5>
+                        <small class="text-light opacity-75">Admin Panel</small>
+                    </div>
+                    
+                    <!-- Navigation Menu -->
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link ">
+                                <i class="fas fa-tachometer-alt me-3"></i>
+                                {{ texts.dashboard }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/viloyatlar" class="nav-link active">
+                                <i class="fas fa-map-marker-alt me-3"></i>
+                                {{ texts.regions }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/tumanlar" class="nav-link ">
+                                <i class="fas fa-map me-3"></i>
+                                {{ texts.districts }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/mfylar" class="nav-link">
+                                <i class="fas fa-home me-3"></i>
+                                {{ texts.neighborhoods }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/lavozimlar" class="nav-link">
+                                <i class="fas fa-users me-3"></i>
+                                {{ texts.positions }}
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a href="/admin/faoliyat" class="nav-link ">
+                                <i class="fas fa-history me-3"></i>
+                                {{ texts.activity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sozlamalar" class="nav-link">
+                                <i class="fas fa-cogs me-3"></i>
+                                {{ texts.settings }}
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="my-4 bg-light opacity-25">
+                    
+                    <!-- User Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded" 
+                           data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.1);">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ username }}</strong>
+                                <small class="opacity-75">
+                                    {% if session.role %}
+                                        {{ session.role|replace('_', ' ')|title }}
+                                    {% else %}
+                                        Admin
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow">
+                            <li>
+                                <a class="dropdown-item" href="/admin/sozlamalar">
+                                    <i class="fas fa-user-cog me-2"></i>
+                                    {{ texts.profile_settings }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                    {{ texts.logout }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto main-content">
+                <!-- Navigation History -->
+                <div id="navigationHistory" class="navigation-history" style="display: none;">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb" id="breadcrumbList">
+                            <!-- Breadcrumblar JavaScript orqali to'ldiriladi -->
+                        </ol>
+                    </nav>
+                </div>
+
+                <!-- Viloyatlar ro'yxati sahifasi -->
+                <div id="regionsPage" class="page-container">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                        <div>
+                            <h2 class="fw-bold text-dark mb-1">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                {{ texts.regions }}
+                            </h2>
+                            <p class="text-muted mb-0">Barcha viloyatlar va shaharlarni boshqarish</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRegionModal">
+                                <i class="fas fa-plus me-2"></i>
+                                {{ texts.add_region }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="stats-grid fade-in">
+                        <div class="stat-card regions">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_regions }}</h3>
+                                    <p class="mb-0 opacity-90">{{ texts.total_regions }}</p>
+                                </div>
+                                <i class="fas fa-map-marker-alt fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-layer-group me-1"></i>
+                                    Jami viloyat va shaharlar
+                                </small>
+                            </div>
+                        </div>
+                        <div class="stat-card districts">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_districts }}</h3>
+                                    <p class="mb-0 opacity-90">{{ texts.total_districts }}</p>
+                                </div>
+                                <i class="fas fa-map fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-city me-1"></i>
+                                    Tuman va shaharlar soni
+                                </small>
+                            </div>
+                        </div>
+                        <div class="stat-card neighborhoods">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="fw-bold display-6">{{ stats.total_neighborhoods }}</h3>
+                                    <p class="mb-0 opacity-90">{{ texts.total_neighborhoods }}</p>
+                                </div>
+                                <i class="fas fa-home fa-2x opacity-50"></i>
+                            </div>
+                            <div class="mt-3">
+                                <small class="opacity-75">
+                                    <i class="fas fa-building me-1"></i>
+                                    MFYlar soni
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regions Table -->
+                    <div class="card fade-in">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center flex-wrap">
+                            <h5 class="card-title mb-0 fw-bold">
+                                <i class="fas fa-list me-2"></i>
+                                Barcha Viloyatlar va Shaharlar
+                            </h5>
+                            <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0">
+                                <div class="input-group search-box">
+                                    <input type="text" class="form-control" placeholder="Viloyat nomi bo'yicha qidirish..." id="searchInput">
+                                    <button class="btn btn-outline-secondary" type="button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if data %}
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="regionsTable">
+                                    <thead>
+                                        <tr>
+                                            <th width="50">#</th>
+                                            <th>Viloyat / Shahar</th>
+                                            <th width="120">Turi</th>
+                                            <th width="120">Tumanlar</th>
+                                            
+                                            <th width="120" class="text-center">Harakatlar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for viloyat_nomi, viloyat in data.items() %}
+                                        {% set total_mfylar = 0 %}
+                                        {% set total_staff = 0 %}
+                                        
+                                        {% for tuman in viloyat.tumanlar.values() %}
+                                            {% set total_mfylar = total_mfylar + (tuman.mfylar|length) %}
+                                            {% for mfy in tuman.mfylar.values() %}
+                                                {% for xodim in mfy.xodimlar.values() %}
+                                                    {% if xodim.ism and xodim.ism.strip() %}
+                                                        {% set total_staff = total_staff + 1 %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        
+                                        <tr>
+                                            <td class="fw-bold text-muted">{{ loop.index }}</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="region-avatar me-3">
+                                                        {{ viloyat_nomi[0]|upper }}
+                                                    </div>
+                                                    <div>
+                                                        <strong class="d-block">{{ viloyat_nomi }}</strong>
+                                                        <small class="text-muted">
+                                                            {{ viloyat.tumanlar|length }} ta tuman
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge {% if viloyat.type == 'shahar' %}bg-info{% else %}bg-primary{% endif %} region-type-badge">
+                                                    <i class="fas {% if viloyat.type == 'shahar' %}fa-building{% else %}fa-map{% endif %} me-1"></i>
+                                                    {{ viloyat.type|title }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="text-center">
+                                                    <span class="fw-bold text-primary fs-5">{{ viloyat.tumanlar|length }}</span>
+                                                    <div class="progress progress-thin mt-1">
+                                                        <div class="progress-bar bg-primary" 
+                                                             style="width: {{ (viloyat.tumanlar|length / stats.total_districts * 100)|round(1) if stats.total_districts > 0 else 0 }}%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-outline-primary" 
+                                                            onclick="showRegionDetails('{{ viloyat_nomi }}')"
+                                                            title="Ko'rish" data-bs-toggle="tooltip">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                   
+                                                    <button class="btn btn-sm btn-outline-danger" 
+                                                            onclick="deleteViloyat('{{ viloyat_nomi }}')"
+                                                            title="O'chirish" data-bs-toggle="tooltip">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Table Info -->
+                            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                                <div class="text-muted">
+                                    Jami: <strong>{{ data|length }}</strong> ta viloyat / shahar
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    MFY - Mahalla Fuqarolar Yig'ini
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-map-marker-alt text-muted"></i>
+                                <h5 class="text-muted">Hech qanday viloyat topilmadi</h5>
+                                <p class="text-muted mb-4">Birinchi viloyatni qo'shish uchun quyidagi tugmani bosing</p>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRegionModal">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Viloyat qo'shish
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Viloyat tafsilotlari sahifasi -->
+                <div id="regionDetailsPage" class="page-container" style="display: none;"></div>
+
+                <!-- Tuman tafsilotlari sahifasi -->
+                <div id="districtDetailsPage" class="page-container" style="display: none;"></div>
+
+                <!-- MFY tafsilotlari sahifasi -->
+                <div id="mfyDetailsPage" class="page-container" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal oynalari -->
+    <!-- Viloyat qo'shish modal -->
+    <div class="modal fade" id="addRegionModal" tabindex="-1" aria-labelledby="addRegionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addRegionModalLabel">
+                        <i class="fas fa-plus me-2"></i>
+                        Yangi viloyat qo'shish
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRegionForm">
+                        <div class="mb-3">
+                            <label for="viloyatNomi" class="form-label fw-semibold">Viloyat nomi</label>
+                            <input type="text" class="form-control" id="viloyatNomi" name="viloyat_nomi" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="viloyatTuri" class="form-label fw-semibold">Viloyat turi</label>
+                            <select class="form-select" id="viloyatTuri" name="viloyat_turi" required>
+                                <option value="">Tanlang...</option>
+                                <option value="viloyat">Viloyat</option>
+                                <option value="shahar">Shahar</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="button" class="btn btn-primary" onclick="addViloyat()">Qo'shish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tuman qo'shish modal -->
+    <div class="modal fade" id="addTumanModal" tabindex="-1" aria-labelledby="addTumanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addTumanModalLabel">
+                        <i class="fas fa-plus me-2"></i>
+                        Yangi tuman qo'shish
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTumanForm">
+                        <input type="hidden" id="addTumanViloyat" name="viloyat_nomi">
+                        <div class="mb-3">
+                            <label for="tumanNomi" class="form-label fw-semibold">Tuman nomi</label>
+                            <input type="text" class="form-control" id="tumanNomi" name="tuman_nomi" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tumanTuri" class="form-label fw-semibold">Tuman turi</label>
+                            <select class="form-select" id="tumanTuri" name="tuman_turi" required>
+                                <option value="">Tanlang...</option>
+                                <option value="tuman">Tuman</option>
+                                <option value="shahar">Shahar</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="button" class="btn btn-primary" onclick="addTuman()">Qo'shish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MFY qo'shish modal -->
+    <div class="modal fade" id="addMfyModal" tabindex="-1" aria-labelledby="addMfyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addMfyModalLabel">
+                        <i class="fas fa-plus me-2"></i>
+                        Yangi MFY qo'shish
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMfyForm">
+                        <input type="hidden" id="addMfyViloyat" name="viloyat_nomi">
+                        <input type="hidden" id="addMfyTuman" name="tuman_nomi">
+                        <div class="mb-3">
+                            <label for="mfyNomi" class="form-label fw-semibold">MFY nomi</label>
+                            <input type="text" class="form-control" id="mfyNomi" name="mahalla_nomi" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="button" class="btn btn-primary" onclick="addMfy()">Qo'shish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Xodim qo'shish modal -->
+    <div class="modal fade" id="addXodimModal" tabindex="-1" aria-labelledby="addXodimModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addXodimModalLabel">
+                        <i class="fas fa-plus me-2"></i>
+                        Yangi xodim qo'shish
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addXodimForm">
+                        <input type="hidden" id="addXodimViloyat" name="viloyat_nomi">
+                        <input type="hidden" id="addXodimTuman" name="tuman_nomi">
+                        <input type="hidden" id="addXodimMfy" name="mahalla_nomi">
+                        <div class="mb-3">
+                            <label for="xodimIsm" class="form-label fw-semibold">Xodim ismi</label>
+                            <input type="text" class="form-control" id="xodimIsm" name="ism" required placeholder="Masalan: Ali Valiyev">
+                        </div>
+                        <div class="mb-3">
+                            <label for="xodimLavozim" class="form-label fw-semibold">Lavozim</label>
+                            <input type="text" class="form-control" id="xodimLavozim" name="lavozim" required placeholder="Masalan: Hokim, MFY raisi, IIB inspektori">
+                            <div class="form-text">Istalgan lavozim nomini kiriting</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="xodimTelefon" class="form-label fw-semibold">Telefon raqam</label>
+                            <input type="text" class="form-control" id="xodimTelefon" name="telefon" placeholder="+998-90-123-45-67">
+                        </div>
+                        <div class="mb-3">
+                            <label for="xodimEmail" class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" id="xodimEmail" name="email" placeholder="example@mail.uz">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="button" class="btn btn-primary" onclick="addXodim()">Qo'shish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Xodim tahrirlash modal -->
+    <div class="modal fade" id="editXodimModal" tabindex="-1" aria-labelledby="editXodimModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="editXodimModalLabel">
+                        <i class="fas fa-edit me-2"></i>
+                        Xodimni tahrirlash
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editXodimForm">
+                        <input type="hidden" id="editXodimViloyat" name="viloyat_nomi">
+                        <input type="hidden" id="editXodimTuman" name="tuman_nomi">
+                        <input type="hidden" id="editXodimOldLavozim" name="lavozim_old">
+                        <input type="hidden" id="editXodimOldMahalla" name="old_mahalla_nomi">
+                        <div class="mb-3">
+                            <label for="editXodimIsm" class="form-label fw-semibold">Xodim ismi</label>
+                            <input type="text" class="form-control" id="editXodimIsm" name="ism" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editXodimLavozim" class="form-label fw-semibold">Lavozim</label>
+                            <input type="text" class="form-control" id="editXodimLavozim" name="lavozim" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editXodimTelefon" class="form-label fw-semibold">Telefon raqam</label>
+                            <input type="text" class="form-control" id="editXodimTelefon" name="telefon">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editXodimEmail" class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" id="editXodimEmail" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editXodimHolat" class="form-label fw-semibold">Holat</label>
+                            <select class="form-select" id="editXodimHolat" name="holat" required>
+                                <option value="faol">Faol</option>
+                                <option value="nofaol">Nofaol</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editXodimMfySelect" class="form-label fw-semibold">MFY</label>
+                            <select class="form-select" id="editXodimMfySelect" name="mahalla_nomi" required>
+                                <option value="">Tanlang...</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="button" class="btn btn-primary" onclick="updateXodim()">Saqlash</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global o'zgaruvchilar
+        let currentRegion = '';
+        let currentDistrict = '';
+        let currentMfy = '';
+        let regionsData = {};
+        let currentEditingXodim = null;
+        let navigationHistory = [];
+
+        // DOM ready funksiyasi
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Ma'lumotlarni yuklash
+                regionsData = JSON.parse('{{ data|tojson|safe }}');
+                
+                // Navigation history ni boshlash
+                navigationHistory = [{
+                    type: 'regions',
+                    title: 'Viloyatlar',
+                    action: showRegionsList
+                }];
+                updateBreadcrumb();
+                
+                // Animation delays
+                const elements = document.querySelectorAll('.fade-in');
+                elements.forEach((element, index) => {
+                    element.style.animationDelay = `${index * 0.1}s`;
+                });
+
+                // Tooltip initialization
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                    new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+
+                // Modal cleanup setup
+                setupModalCleanup();
+
+                // Search functionality for regions
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function(e) {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const rows = document.querySelectorAll('#regionsTable tbody tr');
+                        
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+                }
+
+            } catch (error) {
+                console.error('DOM ready error:', error);
+            }
+        });
+
+        // Navigation history funksiyalari
+        function updateBreadcrumb() {
+            const breadcrumbList = document.getElementById('breadcrumbList');
+            const navigationHistoryEl = document.getElementById('navigationHistory');
+            
+            if (navigationHistory.length > 1) {
+                navigationHistoryEl.style.display = 'block';
+                breadcrumbList.innerHTML = '';
+                
+                navigationHistory.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = index === navigationHistory.length - 1 ? 'breadcrumb-item active' : 'breadcrumb-item';
+                    
+                    if (index === navigationHistory.length - 1) {
+                        li.textContent = item.title;
+                        li.setAttribute('aria-current', 'page');
+                    } else {
+                        const a = document.createElement('a');
+                        a.href = '#';
+                        a.textContent = item.title;
+                        a.onclick = function(e) {
+                            e.preventDefault();
+                            // Navigate to this level
+                            navigationHistory = navigationHistory.slice(0, index + 1);
+                            item.action();
+                        };
+                        li.appendChild(a);
+                    }
+                    
+                    breadcrumbList.appendChild(li);
+                });
+            } else {
+                navigationHistoryEl.style.display = 'none';
+            }
+        }
+
+        function addToNavigationHistory(type, title, action) {
+            // Remove any existing items of the same type
+            navigationHistory = navigationHistory.filter(item => item.type !== type);
+            navigationHistory.push({ type, title, action });
+            updateBreadcrumb();
+        }
+
+        // Loading overlay funksiyasi
+        function showLoading(message = 'Yuklanmoqda...') {
+            hideLoading();
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.id = 'loadingOverlay';
+            overlay.innerHTML = `
+                <div class="text-center">
+                    <div class="spinner-border mb-3" role="status"></div>
+                    <div>${message}</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notif => notif.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `custom-notification alert alert-${type} alert-dismissible fade show`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+            
+            const icons = {
+                'success': 'check-circle',
+                'danger': 'exclamation-triangle',
+                'warning': 'exclamation-circle',
+                'info': 'info-circle'
+            };
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${icons[type]} me-2"></i>
+                    <span class="flex-grow-1">${message}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Form reset funksiyasi
+        function resetForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.reset();
+                const selects = form.querySelectorAll('select');
+                selects.forEach(select => {
+                    if (select.options.length > 0) {
+                        select.selectedIndex = 0;
+                    }
+                });
+            }
+        }
+
+        // Modal cleanup setup
+        function setupModalCleanup() {
+            const modals = ['addRegionModal', 'addTumanModal', 'addMfyModal', 'addXodimModal', 'editXodimModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.addEventListener('hidden.bs.modal', function() {
+                        const form = this.querySelector('form');
+                        if (form) {
+                            resetForm(form.id);
+                        }
+                        if (modalId === 'editXodimModal') {
+                            currentEditingXodim = null;
+                        }
+                    });
+                }
+            });
+        }
+
+        // ========== SAHIFA NAVIGATSIYASI ==========
+
+        function showRegionsList() {
+            document.getElementById('regionsPage').style.display = 'block';
+            document.getElementById('regionDetailsPage').style.display = 'none';
+            document.getElementById('districtDetailsPage').style.display = 'none';
+            document.getElementById('mfyDetailsPage').style.display = 'none';
+            
+            currentRegion = '';
+            currentDistrict = '';
+            currentMfy = '';
+            
+            // Navigation history ni yangilash
+            navigationHistory = [{
+                type: 'regions',
+                title: 'Viloyatlar',
+                action: showRegionsList
+            }];
+            updateBreadcrumb();
+        }
+
+        function showRegionDetails(regionName) {
+            showLoading('Viloyat ma\'lumotlari yuklanmoqda...');
+            
+            setTimeout(() => {
+                try {
+                    currentRegion = regionName;
+                    const region = regionsData[regionName];
+                    
+                    if (!region) {
+                        showNotification('Viloyat ma\'lumotlari topilmadi', 'danger');
+                        hideLoading();
+                        return;
+                    }
+
+                    // MFYlar sonini to'g'ri hisoblash
+                    let totalMfylar = 0;
+                    let totalStaff = 0;
+                    
+                    Object.values(region.tumanlar || {}).forEach(tuman => {
+                        totalMfylar += Object.keys(tuman.mfylar || {}).length;
+                        Object.values(tuman.mfylar || {}).forEach(mfy => {
+                            if (mfy.xodimlar) {
+                                Object.values(mfy.xodimlar).forEach(xodim => {
+                                    if (xodim.ism && xodim.ism.trim() !== '') {
+                                        totalStaff++;
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                    // Sahifa kontentini yaratish
+                    const regionDetailsPage = document.getElementById('regionDetailsPage');
+                    regionDetailsPage.innerHTML = `
+                        <div class="page-content">
+                            <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                                <div class="d-flex align-items-center">
+                                    <button class="btn back-button me-3" onclick="showRegionsList()">
+                                        <i class="fas fa-arrow-left me-2"></i>
+                                        Orqaga
+                                    </button>
+                                    <div>
+                                        <h2 class="fw-bold text-dark mb-1">
+                                            <i class="fas fa-map-marker-alt me-2"></i>
+                                            ${regionName}
+                                        </h2>
+                                        <p class="text-muted mb-0">${region.type === 'shahar' ? 'Shahar' : 'Viloyat'} ma'lumotlari</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary" onclick="addTumanToRegion()">
+                                        <i class="fas fa-plus me-2"></i>
+                                        Tuman qo'shish
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Region Details Card -->
+                            <div class="region-details fade-in">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="fw-bold mb-2">${regionName}</h3>
+                                        <p class="mb-0 opacity-90">${region.type === 'shahar' ? 'Shahar' : 'Viloyat'}</p>
+                                    </div>
+                                    <div class="region-avatar" style="width: 70px; height: 70px; font-size: 24px;">
+                                        ${regionName[0].toUpperCase()}
+                                    </div>
+                                </div>
+                                
+                                <div class="details-grid">
+                                    <div class="detail-item">
+                                        <div class="detail-value">${Object.keys(region.tumanlar || {}).length}</div>
+                                        <div class="detail-label">Tumanlar</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-value">${totalMfylar}</div>
+                                        <div class="detail-label">MFYlar</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-value">${totalStaff}</div>
+                                        <div class="detail-label">Xodimlar</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tumanlar Table -->
+                            <div class="card fade-in">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0 fw-bold">
+                                        <i class="fas fa-city me-2"></i>
+                                        Tumanlar ro'yxati
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <div class="input-group search-box">
+                                            <input type="text" class="form-control" placeholder="Tuman nomi bo'yicha qidirish..." id="districtSearchInput">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="districtsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50">#</th>
+                                                    <th>Tuman nomi</th>
+                                                    <th width="120">Turi</th>
+                                                    <th width="120">MFYlar soni</th>
+                                                    <th width="120">Xodimlar</th>
+                                                    <th width="150" class="text-center">Harakatlar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${generateDistrictsTable(region, regionName)}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Sahifalarni ko'rsatish
+                    document.getElementById('regionsPage').style.display = 'none';
+                    document.getElementById('regionDetailsPage').style.display = 'block';
+                    document.getElementById('districtDetailsPage').style.display = 'none';
+                    document.getElementById('mfyDetailsPage').style.display = 'none';
+                    
+                    // Navigation history ni yangilash
+                    addToNavigationHistory('region', regionName, () => showRegionDetails(regionName));
+                    
+                    // Search funksiyasini qayta ishga tushirish
+                    setupDistrictSearch();
+                    
+                } catch (error) {
+                    console.error('Region details error:', error);
+                    showNotification('Viloyat ma\'lumotlarini yuklashda xatolik', 'danger');
+                } finally {
+                    hideLoading();
+                }
+            }, 500);
+        }
+
+        function showDistrictDetails(regionName, districtName) {
+            showLoading('Tuman ma\'lumotlari yuklanmoqda...');
+            
+            setTimeout(() => {
+                try {
+                    currentRegion = regionName;
+                    currentDistrict = districtName;
+                    const region = regionsData[regionName];
+                    const district = region.tumanlar[districtName];
+                    
+                    if (!district) {
+                        showNotification('Tuman ma\'lumotlari topilmadi', 'danger');
+                        hideLoading();
+                        return;
+                    }
+
+                    // Xodimlar sonini to'g'ri hisoblash
+                    let districtStaff = 0;
+                    Object.values(district.mfylar || {}).forEach(mfy => {
+                        if (mfy.xodimlar) {
+                            Object.values(mfy.xodimlar).forEach(xodim => {
+                                if (xodim.ism && xodim.ism.trim() !== '') {
+                                    districtStaff++;
+                                }
+                            });
+                        }
+                    });
+
+                    // Sahifa kontentini yaratish
+                    const districtDetailsPage = document.getElementById('districtDetailsPage');
+                    districtDetailsPage.innerHTML = `
+                        <div class="page-content">
+                            <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                                <div class="d-flex align-items-center">
+                                    <button class="btn back-button me-3" onclick="showRegionDetails('${regionName}')">
+                                        <i class="fas fa-arrow-left me-2"></i>
+                                        Orqaga
+                                    </button>
+                                    <div>
+                                        <h2 class="fw-bold text-dark mb-1">
+                                            <i class="fas fa-city me-2"></i>
+                                            ${districtName}
+                                        </h2>
+                                        <p class="text-muted mb-0">${district.type === 'shahar' ? 'Shahar' : 'Tuman'} ma'lumotlari</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary" onclick="addMfyToDistrict()">
+                                        <i class="fas fa-plus me-2"></i>
+                                        MFY qo'shish
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- District Details Card -->
+                            <div class="region-details fade-in" style="background: linear-gradient(135deg, #27ae60, #229954);">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="fw-bold mb-2">${districtName}</h3>
+                                        <p class="mb-0 opacity-90">${district.type === 'shahar' ? 'Shahar' : 'Tuman'}</p>
+                                        <small class="opacity-75">Viloyat: ${regionName}</small>
+                                    </div>
+                                    <div class="district-avatar" style="width: 70px; height: 70px; font-size: 24px;">
+                                        ${districtName[0].toUpperCase()}
+                                    </div>
+                                </div>
+                                
+                                <div class="details-grid">
+                                    <div class="detail-item">
+                                        <div class="detail-value">${Object.keys(district.mfylar || {}).length}</div>
+                                        <div class="detail-label">MFYlar</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-value">${districtStaff}</div>
+                                        <div class="detail-label">Xodimlar</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MFYlar Table -->
+                            <div class="card fade-in">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0 fw-bold">
+                                        <i class="fas fa-home me-2"></i>
+                                        MFYlar ro'yxati
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <div class="input-group search-box">
+                                            <input type="text" class="form-control" placeholder="MFY nomi bo'yicha qidirish..." id="mfySearchInput">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="mfyTable">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50">#</th>
+                                                    <th>MFY nomi</th>
+                                                    <th width="120">Xodimlar soni</th>
+                                                    <th width="150" class="text-center">Harakatlar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${generateMfyTable(district, regionName, districtName)}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Sahifalarni ko'rsatish
+                    document.getElementById('regionsPage').style.display = 'none';
+                    document.getElementById('regionDetailsPage').style.display = 'none';
+                    document.getElementById('districtDetailsPage').style.display = 'block';
+                    document.getElementById('mfyDetailsPage').style.display = 'none';
+                    
+                    // Navigation history ni yangilash
+                    addToNavigationHistory('district', districtName, () => showDistrictDetails(regionName, districtName));
+                    
+                    // Search funksiyasini qayta ishga tushirish
+                    setupMfySearch();
+                    
+                } catch (error) {
+                    console.error('District details error:', error);
+                    showNotification('Tuman ma\'lumotlarini yuklashda xatolik', 'danger');
+                } finally {
+                    hideLoading();
+                }
+            }, 500);
+        }
+
+        function showMfyDetails(regionName, districtName, mfyName) {
+            showLoading('MFY ma\'lumotlari yuklanmoqda...');
+            
+            setTimeout(() => {
+                try {
+                    currentRegion = regionName;
+                    currentDistrict = districtName;
+                    currentMfy = mfyName;
+                    const region = regionsData[regionName];
+                    const district = region.tumanlar[districtName];
+                    const mfy = district.mfylar[mfyName];
+                    
+                    if (!mfy) {
+                        showNotification('MFY ma\'lumotlari topilmadi', 'danger');
+                        hideLoading();
+                        return;
+                    }
+
+                    // Sahifa kontentini yaratish
+                    const mfyDetailsPage = document.getElementById('mfyDetailsPage');
+                    mfyDetailsPage.innerHTML = `
+                        <div class="page-content">
+                            <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                                <div class="d-flex align-items-center">
+                                    <button class="btn back-button me-3" onclick="showDistrictDetails('${regionName}', '${districtName}')">
+                                        <i class="fas fa-arrow-left me-2"></i>
+                                        Orqaga
+                                    </button>
+                                    <div>
+                                        <h2 class="fw-bold text-dark mb-1">
+                                            <i class="fas fa-home me-2"></i>
+                                            ${mfyName}
+                                        </h2>
+                                        <p class="text-muted mb-0">MFY ma'lumotlari</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary" onclick="addXodimToMfy()">
+                                        <i class="fas fa-plus me-2"></i>
+                                        Xodim qo'shish
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- MFY Details Card -->
+                            <div class="region-details fade-in" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="fw-bold mb-2">${mfyName}</h3>
+                                        <p class="mb-0 opacity-90">Mahalla Fuqarolar Yig'ini</p>
+                                        <small class="opacity-75">${districtName} tumani, ${regionName} viloyati</small>
+                                    </div>
+                                    <div class="mfy-avatar" style="width: 70px; height: 70px; font-size: 24px;">
+                                        ${mfyName[0].toUpperCase()}
+                                    </div>
+                                </div>
+                                
+                                <div class="details-grid">
+                                    <div class="detail-item">
+                                        <div class="detail-value">${mfy.xodimlar ? Object.values(mfy.xodimlar).filter(x => x.ism && x.ism.trim() !== '').length : 0}</div>
+                                        <div class="detail-label">Xodimlar</div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+                            <!-- Xodimlar Table -->
+                            <div class="card fade-in">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0 fw-bold">
+                                        <i class="fas fa-user-tie me-2"></i>
+                                        Xodimlar ro'yxati
+                                    </h5>
+                                    <div class="d-flex gap-2">
+                                        <div class="input-group search-box">
+                                            <input type="text" class="form-control" placeholder="Xodim ismi bo'yicha qidirish..." id="staffSearchInput">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="staff-table-container">
+                                        <table class="table table-hover mb-0" id="staffTable">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50">#</th>
+                                                    <th>Xodim</th>
+                                                    <th width="150">Lavozim</th>
+                                                    <th width="120">Telefon</th>
+                                                    <th width="100">Holat</th>
+                                                    <th width="120" class="text-center">Harakatlar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${generateStaffTable(mfy, regionName, districtName, mfyName)}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Sahifalarni ko'rsatish
+                    document.getElementById('regionsPage').style.display = 'none';
+                    document.getElementById('regionDetailsPage').style.display = 'none';
+                    document.getElementById('districtDetailsPage').style.display = 'none';
+                    document.getElementById('mfyDetailsPage').style.display = 'block';
+                    
+                    // Navigation history ni yangilash
+                    addToNavigationHistory('mfy', mfyName, () => showMfyDetails(regionName, districtName, mfyName));
+                    
+                    // Search funksiyasini qayta ishga tushirish
+                    setupStaffSearch();
+                    
+                } catch (error) {
+                    console.error('MFY details error:', error);
+                    showNotification('MFY ma\'lumotlarini yuklashda xatolik', 'danger');
+                } finally {
+                    hideLoading();
+                }
+            }, 500);
+        }
+
+        // ========== YORDAMCHI FUNKSIYALAR ==========
+
+        function generateDistrictsTable(region, regionName) {
+            let html = '';
+            let index = 1;
+            
+            Object.entries(region.tumanlar || {}).forEach(([tumanNomi, tuman]) => {
+                // MFYlar sonini to'g'ri hisoblash
+                const mfylarCount = Object.keys(tuman.mfylar || {}).length;
+                // Xodimlar sonini to'g'ri hisoblash
+                const staffCount = calculateDistrictStaff(tuman);
+                
+                html += `
+                    <tr class="clickable-row">
+                        <td class="fw-bold text-muted">${index}</td>
+                        <td onclick="showDistrictDetails('${regionName}', '${tumanNomi}')">
+                            <div class="d-flex align-items-center">
+                                <div class="district-avatar me-3">
+                                    ${tumanNomi[0].toUpperCase()}
+                                </div>
+                                <div>
+                                    <strong class="d-block">${tumanNomi}</strong>
+                                    <small class="text-muted">${mfylarCount} ta MFY, ${staffCount} ta xodim</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td onclick="showDistrictDetails('${regionName}', '${tumanNomi}')">
+                            <span class="badge ${tuman.type === 'shahar' ? 'bg-info' : 'bg-primary'}">
+                                ${tuman.type === 'shahar' ? 'Shahar' : 'Tuman'}
+                            </span>
+                        </td>
+                        <td onclick="showDistrictDetails('${regionName}', '${tumanNomi}')">
+                            <span class="fw-bold text-success">${mfylarCount}</span>
+                        </td>
+                        <td onclick="showDistrictDetails('${regionName}', '${tumanNomi}')">
+                            <span class="fw-bold text-warning">${staffCount}</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        onclick="event.stopPropagation(); deleteTuman('${regionName}', '${tumanNomi}')"
+                                        title="O'chirish">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                index++;
+            });
+            
+            return html;
+        }
+
+        function generateMfyTable(district, regionName, districtName) {
+            let html = '';
+            let index = 1;
+            
+            Object.entries(district.mfylar || {}).forEach(([mfyNomi, mfy]) => {
+                // Xodimlar sonini to'g'ri hisoblash - faqat ismi bo'lgan xodimlarni hisoblash
+                const staffCount = mfy.xodimlar ? Object.values(mfy.xodimlar).filter(xodim => 
+                    xodim.ism && xodim.ism.trim() !== ''
+                ).length : 0;
+                
+                html += `
+                    <tr class="clickable-row">
+                        <td class="fw-bold text-muted">${index}</td>
+                        <td onclick="showMfyDetails('${regionName}', '${districtName}', '${mfyNomi}')">
+                            <div class="d-flex align-items-center">
+                                <div class="mfy-avatar me-3">
+                                    ${mfyNomi[0].toUpperCase()}
+                                </div>
+                                <div>
+                                    <strong class="d-block">${mfyNomi}</strong>
+                                    <small class="text-muted">${staffCount} ta xodim</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td onclick="showMfyDetails('${regionName}', '${districtName}', '${mfyNomi}')">
+                            <span class="fw-bold text-warning">${staffCount}</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        onclick="event.stopPropagation(); deleteMfy('${regionName}', '${districtName}', '${mfyNomi}')"
+                                        title="O'chirish">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                index++;
+            });
+            
+            return html;
+        }
+
+        function generateStaffTable(mfy, regionName, districtName, mfyName) {
+            let html = '';
+            let index = 1;
+            
+            if (mfy.xodimlar) {
+                Object.entries(mfy.xodimlar).forEach(([lavozim, xodim]) => {
+                    // Faqat ismi bo'lgan xodimlarni ko'rsatish
+                    if (xodim.ism && xodim.ism.trim() !== '') {
+                        const lavozimNomi = lavozim.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        
+                        html += `
+                            <tr>
+                                <td class="fw-bold text-muted">${index}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="staff-avatar me-3">
+                                            ${xodim.ism[0].toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <strong class="d-block">${xodim.ism}</strong>
+                                            ${xodim.email ? `<small class="text-muted">${xodim.email}</small>` : ''}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">${lavozimNomi}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-phone text-success me-2"></i>
+                                        <small>${xodim.telefon || 'Mavjud emas'}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge ${xodim.holat === 'faol' ? 'bg-success' : 'bg-secondary'}">
+                                        ${xodim.holat === 'faol' ? 'Faol' : 'Nofaol'}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-outline-warning" 
+                                                onclick="editXodim('${regionName}', '${districtName}', '${mfyName}', '${lavozim}')"
+                                                title="Tahrirlash">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" 
+                                                onclick="deleteXodim('${regionName}', '${districtName}', '${mfyName}', '${lavozim}')"
+                                                title="O'chirish">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        index++;
+                    }
+                });
+            }
+            
+            if (html === '') {
+                html = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-user-tie text-muted"></i>
+                                <h5 class="text-muted">Hech qanday xodim topilmadi</h5>
+                                <p class="text-muted mb-4">Birinchi xodimni qo'shish uchun quyidagi tugmani bosing</p>
+                                <button class="btn btn-primary" onclick="addXodimToMfy()">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Xodim qo'shish
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            return html;
+        }
+
+        function calculateDistrictStaff(district) {
+            let total = 0;
+            Object.values(district.mfylar || {}).forEach(mfy => {
+                if (mfy.xodimlar) {
+                    Object.values(mfy.xodimlar).forEach(xodim => {
+                        // Faqat ismi bo'lgan xodimlarni hisoblash
+                        if (xodim.ism && xodim.ism.trim() !== '') {
+                            total++;
+                        }
+                    });
+                }
+            });
+            return total;
+        }
+
+        // Search funksiyalari
+        function setupDistrictSearch() {
+            const searchInput = document.getElementById('districtSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#districtsTable tbody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
+        }
+
+        function setupMfySearch() {
+            const searchInput = document.getElementById('mfySearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#mfyTable tbody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
+        }
+
+        function setupStaffSearch() {
+            const searchInput = document.getElementById('staffSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#staffTable tbody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
+            }
+        }
+
+        // ========== TUMAN FUNKSIYALARI ==========
+
+        // Tuman qo'shish modalini ochish
+        function addTumanToRegion() {
+            document.getElementById('addTumanViloyat').value = currentRegion;
+            const addTumanModal = new bootstrap.Modal(document.getElementById('addTumanModal'));
+            addTumanModal.show();
+        }
+
+        // Tuman qo'shish
+        async function addTuman() {
+            const form = document.getElementById('addTumanForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.tuman_nomi.trim()) {
+                showNotification('Tuman nomini kiriting', 'warning');
+                return;
+            }
+            
+            showLoading('Tuman qo\'shilmoqda...');
+            
+            try {
+                const response = await fetch('/admin/add_tuman', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Modalni yopish
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addTumanModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                    
+                    resetForm('addTumanForm');
+                    
+                    // Ma'lumotlarni yangilash
+                    if (!regionsData[data.viloyat_nomi].tumanlar) {
+                        regionsData[data.viloyat_nomi].tumanlar = {};
+                    }
+                    regionsData[data.viloyat_nomi].tumanlar[data.tuman_nomi] = {
+                        type: data.tuman_turi,
+                        mfylar: {}
+                    };
+                    
+                    // Sahifani yangilash
+                    showRegionDetails(currentRegion);
+                    
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Tuman o'chirish
+        function deleteTuman(viloyatNomi, tumanNomi) {
+            if (confirm("'" + tumanNomi + "' tumanini o'chirishni tasdiqlaysizmi? Bu bilan bog'liq barcha MFYlar va xodimlar ham o'chiriladi.")) {
+                showLoading('Tuman o\'chirilmoqda...');
+                
+                fetch('/admin/delete_tuman', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        viloyat_nomi: viloyatNomi,
+                        tuman_nomi: tumanNomi
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showNotification(result.message, 'success');
+                        
+                        // Ma'lumotlarni yangilash
+                        const region = regionsData[viloyatNomi];
+                        if (region.tumanlar && region.tumanlar[tumanNomi]) {
+                            delete region.tumanlar[tumanNomi];
+                        }
+                        
+                        // Sahifani yangilash
+                        showRegionDetails(viloyatNomi);
+                        
+                    } else {
+                        showNotification(result.message, 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Xatolik yuz berdi:', error);
+                    showNotification('Xatolik yuz berdi', 'danger');
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+            }
+        }
+
+        // ========== MFY FUNKSIYALARI ==========
+
+        // MFY qo'shish modalini ochish
+        function addMfyToDistrict() {
+            document.getElementById('addMfyViloyat').value = currentRegion;
+            document.getElementById('addMfyTuman').value = currentDistrict;
+            const addMfyModal = new bootstrap.Modal(document.getElementById('addMfyModal'));
+            addMfyModal.show();
+        }
+
+        // MFY qo'shish
+        async function addMfy() {
+            const form = document.getElementById('addMfyForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.mahalla_nomi.trim()) {
+                showNotification('MFY nomini kiriting', 'warning');
+                return;
+            }
+            
+            showLoading('MFY qo\'shilmoqda...');
+            
+            try {
+                const response = await fetch('/admin/add_mahalla', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Modalni yopish
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addMfyModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                    
+                    resetForm('addMfyForm');
+                    
+                    // Ma'lumotlarni yangilash
+                    const region = regionsData[data.viloyat_nomi];
+                    const district = region.tumanlar[data.tuman_nomi];
+                    if (!district.mfylar) district.mfylar = {};
+                    district.mfylar[data.mahalla_nomi] = {
+                        xodimlar: {},
+                        foydalanuvchilar_soni: "0",
+                        yaratilgan_vaqt: new Date().toISOString(),
+                        holat: "faol"
+                    };
+                    
+                    // Sahifani yangilash
+                    showDistrictDetails(currentRegion, currentDistrict);
+                    
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // MFY o'chirish
+        function deleteMfy(viloyatNomi, tumanNomi, mfyNomi) {
+            if (confirm("'" + mfyNomi + "' MFYni o'chirishni tasdiqlaysizmi? Bu bilan bog'liq barcha xodimlar ham o'chiriladi.")) {
+                showLoading('MFY o\'chirilmoqda...');
+                
+                fetch('/admin/delete_mahalla', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        viloyat_nomi: viloyatNomi,
+                        tuman_nomi: tumanNomi,
+                        mahalla_nomi: mfyNomi
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showNotification(result.message, 'success');
+                        
+                        // Ma'lumotlarni yangilash
+                        const region = regionsData[viloyatNomi];
+                        const district = region.tumanlar[tumanNomi];
+                        if (district.mfylar && district.mfylar[mfyNomi]) {
+                            delete district.mfylar[mfyNomi];
+                        }
+                        
+                        // Sahifani yangilash
+                        showDistrictDetails(viloyatNomi, tumanNomi);
+                        
+                    } else {
+                        showNotification(result.message, 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Xatolik yuz berdi:', error);
+                    showNotification('Xatolik yuz berdi', 'danger');
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+            }
+        }
+
+        // ========== XODIM FUNKSIYALARI ==========
+
+        // Xodim qo'shish modalini ochish
+        function addXodimToMfy() {
+            document.getElementById('addXodimViloyat').value = currentRegion;
+            document.getElementById('addXodimTuman').value = currentDistrict;
+            document.getElementById('addXodimMfy').value = currentMfy;
+            const addXodimModal = new bootstrap.Modal(document.getElementById('addXodimModal'));
+            addXodimModal.show();
+        }
+
+        // Xodim qo'shish
+        async function addXodim() {
+            const form = document.getElementById('addXodimForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.ism.trim()) {
+                showNotification('Xodim ismini kiriting', 'warning');
+                return;
+            }
+            
+            if (!data.lavozim.trim()) {
+                showNotification('Lavozimni kiriting', 'warning');
+                return;
+            }
+            
+            showLoading('Xodim qo\'shilmoqda...');
+            
+            try {
+                const response = await fetch('/admin/add_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Modalni yopish
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addXodimModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                    
+                    resetForm('addXodimForm');
+                    
+                    // Ma'lumotlarni yangilash
+                    const region = regionsData[data.viloyat_nomi];
+                    const district = region.tumanlar[data.tuman_nomi];
+                    const mfy = district.mfylar[data.mahalla_nomi];
+                    
+                    if (!mfy.xodimlar) mfy.xodimlar = {};
+                    mfy.xodimlar[data.lavozim] = {
+                        ism: data.ism,
+                        telefon: data.telefon || '',
+                        email: data.email || '',
+                        holat: 'faol'
+                    };
+                    
+                    // Sahifani yangilash
+                    showMfyDetails(data.viloyat_nomi, data.tuman_nomi, data.mahalla_nomi);
+                    
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Xodimni tahrirlash funksiyalari
+        function editXodim(viloyatNomi, tumanNomi, mahallaNomi, lavozim) {
+            const region = regionsData[viloyatNomi];
+            const district = region.tumanlar[tumanNomi];
+            const mfy = district.mfylar[mahallaNomi];
+            const xodim = mfy.xodimlar[lavozim];
+            
+            if (!xodim) {
+                showNotification('Xodim ma\'lumotlari topilmadi', 'danger');
+                return;
+            }
+            
+            // Joriy tahrirlanayotgan xodimni saqlash
+            currentEditingXodim = {
+                viloyatNomi,
+                tumanNomi,
+                mahallaNomi,
+                lavozim
+            };
+            
+            // Formni to'ldirish
+            document.getElementById('editXodimViloyat').value = viloyatNomi;
+            document.getElementById('editXodimTuman').value = tumanNomi;
+            document.getElementById('editXodimOldLavozim').value = lavozim;
+            document.getElementById('editXodimOldMahalla').value = mahallaNomi;
+            document.getElementById('editXodimIsm').value = xodim.ism || '';
+            document.getElementById('editXodimLavozim').value = lavozim;
+            document.getElementById('editXodimTelefon').value = xodim.telefon || '';
+            document.getElementById('editXodimEmail').value = xodim.email || '';
+            document.getElementById('editXodimHolat').value = xodim.holat || 'faol';
+            
+            // MFYlarni yuklash
+            const mfySelect = document.getElementById('editXodimMfySelect');
+            if (mfySelect) {
+                mfySelect.innerHTML = '<option value="">Tanlang...</option>';
+                
+                Object.keys(district.mfylar).forEach(mfy => {
+                    const option = document.createElement('option');
+                    option.value = mfy;
+                    option.textContent = mfy;
+                    if (mfy === mahallaNomi) {
+                        option.selected = true;
+                    }
+                    mfySelect.appendChild(option);
+                });
+            }
+            
+            const editXodimModal = new bootstrap.Modal(document.getElementById('editXodimModal'));
+            editXodimModal.show();
+        }
+
+        async function updateXodim() {
+            const form = document.getElementById('editXodimForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.ism.trim()) {
+                showNotification('Xodim ismini kiriting', 'warning');
+                return;
+            }
+            
+            if (!data.lavozim.trim()) {
+                showNotification('Lavozimni kiriting', 'warning');
+                return;
+            }
+            
+            if (!data.mahalla_nomi.trim()) {
+                showNotification('MFYni tanlang', 'warning');
+                return;
+            }
+            
+            showLoading('Xodim yangilanmoqda...');
+            
+            try {
+                const response = await fetch('/admin/update_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Modalni yopish
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editXodimModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                    
+                    // Ma'lumotlarni yangilash
+                    if (currentEditingXodim) {
+                        const region = regionsData[currentEditingXodim.viloyatNomi];
+                        const district = region.tumanlar[currentEditingXodim.tumanNomi];
+                        
+                        // Agar MFY o'zgartirilgan bo'lsa
+                        if (currentEditingXodim.mahallaNomi !== data.mahalla_nomi) {
+                            // Eski MFYdan o'chirish
+                            const oldMfy = district.mfylar[currentEditingXodim.mahallaNomi];
+                            if (oldMfy.xodimlar && oldMfy.xodimlar[currentEditingXodim.lavozim]) {
+                                delete oldMfy.xodimlar[currentEditingXodim.lavozim];
+                            }
+                            
+                            // Yangi MFYga qo'shish
+                            const newMfy = district.mfylar[data.mahalla_nomi];
+                            if (!newMfy.xodimlar) newMfy.xodimlar = {};
+                            newMfy.xodimlar[data.lavozim] = {
+                                ism: data.ism,
+                                telefon: data.telefon,
+                                email: data.email,
+                                holat: data.holat
+                            };
+                        } else {
+                            // Xuddi shu MFYda tahrirlash
+                            const mfy = district.mfylar[data.mahalla_nomi];
+                            
+                            // Agar lavozim nomi o'zgartirilgan bo'lsa
+                            if (currentEditingXodim.lavozim !== data.lavozim) {
+                                // Eski lavozimni o'chirib, yangisi bilan qo'shamiz
+                                if (mfy.xodimlar && mfy.xodimlar[currentEditingXodim.lavozim]) {
+                                    delete mfy.xodimlar[currentEditingXodim.lavozim];
+                                }
+                                mfy.xodimlar[data.lavozim] = {
+                                    ism: data.ism,
+                                    telefon: data.telefon,
+                                    email: data.email,
+                                    holat: data.holat
+                                };
+                            } else {
+                                // Xuddi shu lavozimda yangilash
+                                mfy.xodimlar[data.lavozim] = {
+                                    ism: data.ism,
+                                    telefon: data.telefon,
+                                    email: data.email,
+                                    holat: data.holat
+                                };
+                            }
+                        }
+                        
+                        // Jadvalni yangilash
+                        showMfyDetails(currentEditingXodim.viloyatNomi, currentEditingXodim.tumanNomi, data.mahalla_nomi);
+                    }
+                    
+                    currentEditingXodim = null;
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Xodim o'chirish
+        function deleteXodim(viloyatNomi, tumanNomi, mahallaNomi, lavozim) {
+            if (confirm("Xodimni o'chirishni tasdiqlaysizmi?")) {
+                showLoading('Xodim o\'chirilmoqda...');
+                
+                fetch('/admin/delete_xodim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        viloyat_nomi: viloyatNomi,
+                        tuman_nomi: tumanNomi,
+                        mahalla_nomi: mahallaNomi,
+                        lavozim: lavozim
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showNotification(result.message, 'success');
+                        
+                        // Ma'lumotlarni yangilash
+                        const region = regionsData[viloyatNomi];
+                        const district = region.tumanlar[tumanNomi];
+                        const mfy = district.mfylar[mahallaNomi];
+                        
+                        if (mfy.xodimlar && mfy.xodimlar[lavozim]) {
+                            delete mfy.xodimlar[lavozim];
+                        }
+                        
+                        // Sahifani yangilash
+                        showMfyDetails(viloyatNomi, tumanNomi, mahallaNomi);
+                        
+                    } else {
+                        showNotification(result.message, 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Xatolik yuz berdi:', error);
+                    showNotification('Xatolik yuz berdi', 'danger');
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+            }
+        }
+
+        // ========== VILOYAT FUNKSIYALARI ==========
+
+        // Viloyat qo'shish
+        async function addViloyat() {
+            const form = document.getElementById('addRegionForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            if (!data.viloyat_nomi.trim()) {
+                showNotification('Viloyat nomini kiriting', 'warning');
+                return;
+            }
+            
+            showLoading('Viloyat qo\'shilmoqda...');
+            
+            try {
+                const response = await fetch('/admin/add_viloyat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Modalni yopish
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addRegionModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                    
+                    resetForm('addRegionForm');
+                    
+                    // Sahifani yangilash
+                    location.reload();
+                    
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Xatolik yuz berdi:', error);
+                showNotification('Xatolik yuz berdi', 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Viloyat o'chirish
+        function deleteViloyat(viloyatNomi) {
+            if (confirm("'" + viloyatNomi + "' viloyatini o'chirishni tasdiqlaysizmi? Bu bilan bog'liq barcha tumanlar va MFYlar ham o'chiriladi.")) {
+                showLoading('Viloyat o\'chirilmoqda...');
+                
+                fetch('/admin/delete_viloyat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        viloyat_nomi: viloyatNomi
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showNotification(result.message, 'success');
+                        location.reload();
+                    } else {
+                        showNotification(result.message, 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Xatolik yuz berdi:', error);
+                    showNotification('Xatolik yuz berdi', 'danger');
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+            }
+        }
+
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+            showNotification('Kutilmagan xatolik yuz berdi', 'danger');
+            hideLoading();
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            showNotification('Tarmoq xatosi yuz berdi', 'danger');
+            hideLoading();
+        });
+
+        // Ma'lumotlarni yangilash funksiyasi
+        function refreshData() {
+            showLoading('Ma\'lumotlar yangilanmoqda...');
+            
+            fetch('/admin/get_data')
+                .then(response => response.json())
+                .then(newData => {
+                    regionsData = newData;
+                    hideLoading();
+                    showNotification('Ma\'lumotlar yangilandi', 'success');
+                })
+                .catch(error => {
+                    console.error('Yangilash xatosi:', error);
+                    hideLoading();
+                    showNotification('Yangilashda xatolik', 'danger');
+                });
+        }
+
+        // Har 30 soniyada avtomatik yangilash
+        setInterval(refreshData, 30000);
+    </script> -->
+</body>
+</html> -->
